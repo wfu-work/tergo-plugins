@@ -48,5 +48,9 @@ run_zsh 'cd "$1"; source "$2/env-doctor/init.zsh"; tergo-env-report >/dev/null; 
 run_bash 'cd "$1"; source "$2/env-doctor/init.bash"; tergo-env-report >/dev/null; tergo-env-tools >/dev/null; tergo-env-sources >/dev/null; tergo-env-vars >/dev/null; tergo-env-check >/dev/null'
 run_zsh 'cd "$1"; source "$2/python-workflow/init.zsh"; tergo-python-report >/dev/null; tergo-python-env >/dev/null; tergo-python-install-preview all >/dev/null'
 run_bash 'cd "$1"; source "$2/python-workflow/init.bash"; tergo-python-report >/dev/null; tergo-python-env >/dev/null; tergo-python-install-preview all >/dev/null'
+run_zsh 'cd "$1"; source "$2/terraform-workflow/init.zsh"; tergo-terraform-report >/dev/null; tergo-terraform-files >/dev/null'
+run_bash 'cd "$1"; source "$2/terraform-workflow/init.bash"; tergo-terraform-report >/dev/null; tergo-terraform-files >/dev/null'
+run_zsh 'cd "$1"; source "$2/k8s-helm-release/init.zsh"; tergo-helm-report >/dev/null'
+run_bash 'cd "$1"; source "$2/k8s-helm-release/init.bash"; tergo-helm-report >/dev/null'
 
 printf '%s\n' 'online plugin smoke tests passed'

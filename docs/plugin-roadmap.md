@@ -6,7 +6,7 @@
 
 Tergo 内置插件已经覆盖了项目上下文、任务和测试、Git、Worktree、代码托管、Docker、Kubernetes 基础查询、SSH、远程会话、Shell 历史、日志和端口诊断。在线插件当前以 `command` 面为主，入口是 zsh/bash 启动脚本，安装后默认关闭。
 
-在线仓库已有四个插件：
+在线仓库最早的四个基线插件：
 
 | 插件 | 已解决的问题 | 不应继续扩大的范围 |
 | --- | --- | --- |
@@ -127,9 +127,9 @@ Tergo 已有 Pod、日志和资源删除基础能力，在线插件只补 Helm r
 
 已交付 `env-doctor` 和 `python-workflow`。环境插件只报告工具版本、版本文件、配置来源和变量名，不输出变量值；Python 插件优先复用当前虚拟环境，支持 pytest、ruff、mypy 和依赖过期检查，缺少可选工具时保留终端启动并给出安装提示。下一步应根据安装反馈选择一个云或基础设施方向。
 
-### 阶段 3：基础设施（4～6 周）
+### 阶段 3：基础设施（已完成第一版）
 
-按用户需求选择 `cloud-context`、`k8s-helm-release`、`container-registry` 或 `terraform-workflow` 其中两个，先做只读和变更预览，再开放高风险写操作。
+已优先交付 `terraform-workflow` 和 `k8s-helm-release`。Terraform 插件覆盖 fmt、validate、plan、workspace 和 apply 预览；Helm 插件覆盖 Release 查询、Chart lint、template、values、helm-diff 和 upgrade 预览。两个插件都不执行 apply、upgrade、rollback、删除或 provider/Chart 自动安装。下一步再根据用户安装来源选择 `cloud-context` 或 `container-registry`，避免同时扩大云账号和镜像仓库权限。
 
 ## 每个插件的发布门槛
 
@@ -146,4 +146,4 @@ Tergo 已有 Pod、日志和资源删除基础能力，在线插件只补 Helm r
 
 ## 最终建议
 
-P0 已覆盖 API 调试、CI 运行和 Flutter 生态，阶段 2 已补足环境可复现性和 Python 生态。下一步按真实用户需求在 `cloud-context`、`k8s-helm-release`、`container-registry` 和 `terraform-workflow` 中选择两个，先做只读和变更预览，再开放高风险写操作。
+P0 已覆盖 API 调试、CI 运行和 Flutter 生态，阶段 2 已补足环境可复现性和 Python 生态，阶段 3 已补充 Terraform 与 Helm 的基础设施预览。下一步应根据真实用户需求选择 `cloud-context` 或 `container-registry`，继续保持只读和变更预览边界。

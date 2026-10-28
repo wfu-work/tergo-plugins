@@ -20,6 +20,8 @@ CATEGORIES = {
     "flutter-workflow": "productivity",
     "env-doctor": "environment",
     "python-workflow": "language",
+    "terraform-workflow": "platform",
+    "k8s-helm-release": "platform",
 }
 
 

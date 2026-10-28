@@ -1,0 +1,82 @@
+{
+  "manifestVersion": 1,
+  "id": "terraform-workflow",
+  "name": "Terraform 工作流",
+  "version": "0.1.0",
+  "description": "检查 Terraform 配置、格式、校验、plan 和工作区状态，并提供 apply 预览。",
+  "category": "platform",
+  "shells": ["zsh", "bash"],
+  "entry": {
+    "zsh": "init.zsh",
+    "bash": "init.bash"
+  },
+  "capabilities": ["terraform", "opentofu", "iac", "plan", "diagnostics"],
+  "optionalCommands": ["terraform", "tofu"],
+  "configSources": ["*.tf", "*.tfvars", "backend", ".terraform", "TF_WORKSPACE"],
+  "redaction": {
+    "mode": "omit-values",
+    "fields": ["terraform-state", "provider-credentials", "variable-values", "plan-sensitive-values"]
+  },
+  "platforms": ["darwin", "linux"],
+  "minTergoVersion": "0.2.0",
+  "permissions": ["filesystem", "process", "network"],
+  "surfaces": ["command"],
+  "commands": [
+    {
+      "id": "report",
+      "name": "查看 Terraform 工具",
+      "description": "查看 Terraform/OpenTofu、配置文件和初始化状态，不自动 init。",
+      "command": "tergo-terraform-report",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "files",
+      "name": "发现 Terraform 文件",
+      "description": "列出项目内的 .tf 和变量文件，不读取文件内容。",
+      "command": "tergo-terraform-files",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "fmt-check",
+      "name": "检查 Terraform 格式",
+      "description": "运行 terraform fmt 检查并显示差异，不直接写回文件。",
+      "command": "tergo-terraform-fmt-check",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "validate",
+      "name": "校验 Terraform 配置",
+      "description": "运行 terraform validate，不自动初始化 provider。",
+      "command": "tergo-terraform-validate",
+      "mode": "execute",
+      "risk": "medium"
+    },
+    {
+      "id": "plan",
+      "name": "预览 Terraform 计划",
+      "description": "运行只读 plan，不保存 plan 文件、不执行 apply；输出可能包含敏感差异。",
+      "command": "tergo-terraform-plan",
+      "mode": "execute",
+      "risk": "medium"
+    },
+    {
+      "id": "workspace",
+      "name": "查看 Terraform 工作区",
+      "description": "查看当前 Terraform workspace，不切换工作区。",
+      "command": "tergo-terraform-workspace",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "apply-preview",
+      "name": "预览 Terraform 应用",
+      "description": "展示 apply 命令和风险说明，不执行变更。",
+      "command": "tergo-terraform-apply-preview",
+      "mode": "execute",
+      "risk": "low"
+    }
+  ]
+}

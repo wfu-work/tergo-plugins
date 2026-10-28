@@ -1,0 +1,102 @@
+{
+  "manifestVersion": 1,
+  "id": "k8s-helm-release",
+  "name": "Helm 发布预览",
+  "version": "0.1.0",
+  "description": "查看 Helm Release、校验 Chart、渲染模板、查看差异并预览升级命令。",
+  "category": "platform",
+  "shells": ["zsh", "bash"],
+  "entry": {
+    "zsh": "init.zsh",
+    "bash": "init.bash"
+  },
+  "capabilities": ["kubernetes", "helm", "release", "charts", "diagnostics"],
+  "optionalCommands": ["helm", "kubectl"],
+  "configSources": ["Chart.yaml", "values.yaml", "values*.yaml", "KUBECONFIG", "KUBE_CONTEXT", "KUBE_NAMESPACE"],
+  "redaction": {
+    "mode": "omit-values",
+    "fields": ["kubeconfig", "chart-values", "secret-manifests", "cluster-credentials"]
+  },
+  "platforms": ["darwin", "linux"],
+  "minTergoVersion": "0.2.0",
+  "permissions": ["filesystem", "process", "network"],
+  "surfaces": ["command"],
+  "commands": [
+    {
+      "id": "report",
+      "name": "查看 Helm 工具",
+      "description": "查看 Helm、kubectl、Chart 数量和当前 Kubernetes 上下文。",
+      "command": "tergo-helm-report",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "releases",
+      "name": "查看 Helm Release",
+      "description": "查看当前集群的 Release，可按命名空间过滤。",
+      "command": "tergo-helm-releases {{arg:namespace|}}",
+      "mode": "execute",
+      "risk": "medium",
+      "arguments": [
+        {"name": "namespace", "label": "命名空间", "description": "留空查看所有命名空间"}
+      ]
+    },
+    {
+      "id": "lint",
+      "name": "校验 Helm Chart",
+      "description": "运行 helm lint 检查 Chart 结构和模板。",
+      "command": "tergo-helm-chart-lint {{arg:chart|.}}",
+      "mode": "execute",
+      "risk": "low",
+      "arguments": [
+        {"name": "chart", "label": "Chart 目录", "default": "."}
+      ]
+    },
+    {
+      "id": "template",
+      "name": "渲染 Helm 模板",
+      "description": "本地渲染 Chart，不安装到集群；输出可能包含敏感值。",
+      "command": "tergo-helm-template {{arg:chart|.}}",
+      "mode": "execute",
+      "risk": "medium",
+      "arguments": [
+        {"name": "chart", "label": "Chart 目录", "default": "."}
+      ]
+    },
+    {
+      "id": "values",
+      "name": "查看 Chart 默认值",
+      "description": "查看 Chart 的默认 values，不读取集群凭据。",
+      "command": "tergo-helm-values {{arg:chart|.}}",
+      "mode": "execute",
+      "risk": "low",
+      "arguments": [
+        {"name": "chart", "label": "Chart 目录", "default": "."}
+      ]
+    },
+    {
+      "id": "diff",
+      "name": "查看 Release 差异",
+      "description": "使用 helm-diff 预览 Release 差异，不执行 upgrade。",
+      "command": "tergo-helm-diff {{arg:release}} {{arg:chart|.}}",
+      "mode": "execute",
+      "risk": "medium",
+      "arguments": [
+        {"name": "release", "label": "Release 名称", "required": true},
+        {"name": "chart", "label": "Chart 目录", "default": "."}
+      ]
+    },
+    {
+      "id": "upgrade-preview",
+      "name": "预览 Helm 升级",
+      "description": "展示 helm upgrade 命令，不执行安装、升级或回滚。",
+      "command": "tergo-helm-upgrade-preview {{arg:release}} {{arg:chart|.}}",
+      "mode": "execute",
+      "risk": "low",
+      "arguments": [
+        {"name": "release", "label": "Release 名称", "required": true},
+        {"name": "chart", "label": "Chart 目录", "default": "."}
+      ]
+    }
+  ]
+}
