@@ -9,7 +9,8 @@ Tergo 当前已经提供：
 - 远程插件目录、HTTPS 下载、SHA-256 校验、原子安装和版本更新；
 - zsh/bash 私有启动文件注入，不修改用户的 `.zshrc` 或 `.bashrc`；
 - 声明式 `manifest.json`、命令面板、参数输入、快捷键、风险确认和运行记录；
-- Git、Docker/Compose、Git Worktree、SSH、Kubernetes、项目任务、质量检查、运行时诊断、代码托管、远程会话、日志和端口诊断等内置能力。
+- Git、Docker/Compose、Git Worktree、SSH、Kubernetes、项目任务、质量检查、运行时诊断、代码托管、远程会话、日志和端口诊断等内置能力；
+- 第一批在线插件包括开发者工具箱、数据库工作台、安全扫描和发布工作流。
 
 当前在线插件真正可用的扩展面是 `command`。`panel`、`file-preview`、`settings` 和 `statusbar` 可以写入元数据，但在 Tergo UI 完成对应扩展点前只能作为规划信息，不能把它们当作已经存在的 UI 能力。
 
@@ -20,6 +21,26 @@ Tergo 当前已经提供：
 3. 默认提供只读或预览命令，写操作标记为 `medium`、`high` 或 `critical`；
 4. 不保存云凭据、不把密钥写入参数或日志、不修改用户 Shell 配置；
 5. 同时支持 zsh 和 bash，或在市场详情明确说明平台/ Shell 限制。
+
+## 远程发布方式
+
+官方目录发布在 GitHub Pages：
+
+```text
+https://wfu-work.github.io/tergo-plugins/catalog/index.json
+```
+
+插件包发布在同一站点的 `packages/` 路径。`.github/workflows/plugins.yml` 会在 Pull Request 中校验清单和 Shell，在 `main` 或版本标签推送时生成静态目录、部署 Pages，并为版本标签创建 GitHub Release 资产。Tergo 只读取目录和不可变的 `.tergo-plugin` 包，不读取 GitHub 源码文件。
+
+目录中的 `channel` 使用 `stable`、`beta` 或 `nightly`；`verified: true` 表示该包由官方目录发布者审核，属于展示元数据，不替代 Tergo 下载时执行的 SHA-256 完整性校验。包大小和摘要由打包脚本从最终 `.tergo-plugin` 文件重新计算，不能手工填写。
+
+本地可以用以下命令生成发布站点：
+
+```sh
+./scripts/build-site.sh
+```
+
+如果以后接入自定义域名，只需要在工作流中把 `TERGO_PLUGIN_BASE_URL` 改成新的 `packages/` 地址，并把 Tergo 的插件目录地址配置为对应的 `catalog/index.json`。
 
 ## 插件选择标准
 
@@ -196,7 +217,7 @@ tergo-plugins/
 - 发布 `developer-toolbox`，验证从目录浏览到安装、启用、更新的完整链路；
 - 约定命名、版本、许可证、截图/README 和风险描述格式。
 
-### 第 3～5 周：高频工作流
+### 第 3～5 周：高频工作流（已完成）
 
 - 发布 `database-workbench` 和 `security-scanner`；
 - 加入脱敏输出、临时文件清理和依赖缺失回退；
@@ -216,5 +237,5 @@ tergo-plugins/
 
 ## 建议的第一批发布顺序
 
-优先落地 `developer-toolbox`、`security-scanner`、`release-workflow`。它们依赖常见 CLI、只需命令面板即可提供价值，并且能验证在线插件最关键的安装、诊断、风险确认、日志脱敏和升级回滚链路。`database-workbench` 的用户价值很高，但连接配置和凭据脱敏更复杂，适合作为第二个迭代的重点插件。
+优先落地 `developer-toolbox`、`database-workbench`、`security-scanner`、`release-workflow`。它们依赖常见 CLI、只需命令面板即可提供价值，并且能验证在线插件最关键的安装、诊断、风险确认、日志脱敏和升级回滚链路。当前四个插件已经完成目录、打包和 smoke test 接入，后续迭代再扩展云厂商、API 和可观测性工作流。
 

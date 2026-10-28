@@ -1,0 +1,93 @@
+{
+  "manifestVersion": 1,
+  "id": "database-workbench",
+  "name": "数据库工作台",
+  "version": "0.1.0",
+  "description": "从现有环境配置安全检查 PostgreSQL、MySQL、SQLite 和 Redis。",
+  "shells": ["zsh", "bash"],
+  "entry": {
+    "zsh": "init.zsh",
+    "bash": "init.bash"
+  },
+  "capabilities": ["database", "postgres", "mysql", "sqlite", "redis", "diagnostics", "export"],
+  "platforms": ["darwin", "linux"],
+  "minTergoVersion": "0.2.0",
+  "permissions": ["filesystem", "process", "network"],
+  "surfaces": ["command"],
+  "commands": [
+    {
+      "id": "report",
+      "name": "查看数据库工具",
+      "description": "查看 PostgreSQL、MySQL、SQLite 和 Redis 客户端安装状态，不连接数据库。",
+      "command": "tergo-db-report",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "config",
+      "name": "检查数据库配置",
+      "description": "只显示已配置的来源名称，不显示连接串、密码或 Token。",
+      "command": "tergo-db-config",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "test",
+      "name": "测试数据库连接",
+      "description": "执行无副作用的 SELECT 1 或 PING；数据库类型使用 auto 或显式指定。",
+      "command": "tergo-db-test {{arg:backend|auto}}",
+      "mode": "execute",
+      "risk": "low",
+      "arguments": [
+        {"name": "backend", "label": "数据库类型", "description": "auto、postgres、mysql、sqlite 或 redis", "default": "auto"}
+      ]
+    },
+    {
+      "id": "tables",
+      "name": "查看表和键",
+      "description": "查看数据库中的表，Redis 使用 SCAN 读取部分键名。",
+      "command": "tergo-db-tables {{arg:backend|auto}}",
+      "mode": "execute",
+      "risk": "low",
+      "arguments": [
+        {"name": "backend", "label": "数据库类型", "description": "auto、postgres、mysql、sqlite 或 redis", "default": "auto"}
+      ]
+    },
+    {
+      "id": "query",
+      "name": "执行只读查询",
+      "description": "只接受 SELECT、WITH、SHOW 或 DESCRIBE 查询，不接受多语句和写操作。",
+      "command": "tergo-db-query {{arg:backend|auto}} {{arg:query}}",
+      "mode": "execute",
+      "risk": "low",
+      "arguments": [
+        {"name": "backend", "label": "数据库类型", "default": "auto"},
+        {"name": "query", "label": "只读查询", "description": "不能包含分号或写操作", "required": true}
+      ]
+    },
+    {
+      "id": "explain",
+      "name": "预览查询计划",
+      "description": "对只读查询生成 EXPLAIN 计划，不执行写操作。",
+      "command": "tergo-db-explain {{arg:backend|auto}} {{arg:query}}",
+      "mode": "execute",
+      "risk": "low",
+      "arguments": [
+        {"name": "backend", "label": "数据库类型", "default": "auto"},
+        {"name": "query", "label": "只读查询", "description": "只能是 SELECT 或 WITH 查询", "required": true}
+      ]
+    },
+    {
+      "id": "export",
+      "name": "导出只读结果",
+      "description": "把只读查询结果写入权限为 0600 的临时文件，并返回文件路径。",
+      "command": "tergo-db-export {{arg:backend|auto}} {{arg:query}}",
+      "mode": "execute",
+      "risk": "medium",
+      "arguments": [
+        {"name": "backend", "label": "数据库类型", "default": "auto"},
+        {"name": "query", "label": "只读查询", "description": "不能包含分号或写操作", "required": true}
+      ]
+    }
+  ]
+}

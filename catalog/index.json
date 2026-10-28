@@ -1,7 +1,117 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-28T02:27:29Z",
+  "updatedAt": "2026-10-28T07:18:25Z",
   "plugins": [
+    {
+      "id": "database-workbench",
+      "name": "数据库工作台",
+      "description": "从现有环境配置安全检查 PostgreSQL、MySQL、SQLite 和 Redis。",
+      "version": "0.1.0",
+      "author": "Tergo Contributors",
+      "category": "database",
+      "license": "MIT",
+      "channel": "stable",
+      "verified": true,
+      "packageUrl": "https://wfu-work.github.io/tergo-plugins/packages/database-workbench-0.1.0.tergo-plugin",
+      "packageSize": 9491,
+      "sha256": "a7a009e60d0ba22bea2dd03eb3052b8463f6300dd175401d9c4245903f3025e3",
+      "source": "official",
+      "shells": [
+        "zsh",
+        "bash"
+      ],
+      "capabilities": [
+        "database",
+        "postgres",
+        "mysql",
+        "sqlite",
+        "redis",
+        "diagnostics",
+        "export"
+      ],
+      "requiredCommands": [],
+      "platforms": [
+        "darwin",
+        "linux"
+      ],
+      "minTergoVersion": "0.2.0",
+      "permissions": [
+        "filesystem",
+        "process",
+        "network"
+      ],
+      "surfaces": [
+        "command"
+      ],
+      "commands": [
+        {
+          "id": "report",
+          "name": "查看数据库工具",
+          "description": "查看 PostgreSQL、MySQL、SQLite 和 Redis 客户端安装状态，不连接数据库。",
+          "command": "tergo-db-report",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 0
+        },
+        {
+          "id": "config",
+          "name": "检查数据库配置",
+          "description": "只显示已配置的来源名称，不显示连接串、密码或 Token。",
+          "command": "tergo-db-config",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 0
+        },
+        {
+          "id": "test",
+          "name": "测试数据库连接",
+          "description": "执行无副作用的 SELECT 1 或 PING；数据库类型使用 auto 或显式指定。",
+          "command": "tergo-db-test {{arg:backend|auto}}",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 1
+        },
+        {
+          "id": "tables",
+          "name": "查看表和键",
+          "description": "查看数据库中的表，Redis 使用 SCAN 读取部分键名。",
+          "command": "tergo-db-tables {{arg:backend|auto}}",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 1
+        },
+        {
+          "id": "query",
+          "name": "执行只读查询",
+          "description": "只接受 SELECT、WITH、SHOW 或 DESCRIBE 查询，不接受多语句和写操作。",
+          "command": "tergo-db-query {{arg:backend|auto}} {{arg:query}}",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 2
+        },
+        {
+          "id": "explain",
+          "name": "预览查询计划",
+          "description": "对只读查询生成 EXPLAIN 计划，不执行写操作。",
+          "command": "tergo-db-explain {{arg:backend|auto}} {{arg:query}}",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 2
+        },
+        {
+          "id": "export",
+          "name": "导出只读结果",
+          "description": "把只读查询结果写入权限为 0600 的临时文件，并返回文件路径。",
+          "command": "tergo-db-export {{arg:backend|auto}} {{arg:query}}",
+          "mode": "execute",
+          "risk": "medium",
+          "argumentCount": 2
+        }
+      ],
+      "releaseNotes": "首个公开版本。",
+      "readme": "# 数据库工作台\n\n`database-workbench` 把常见数据库客户端接入 Tergo 命令面板，复用用户已经配置好的环境，不在参数或输出中要求密码。\n\n支持 PostgreSQL (`psql`)、MySQL (`mysql`)、SQLite (`sqlite3`) 和 Redis (`redis-cli`)。客户端都是可选依赖；缺少客户端时，命令会给出安装提示，不会影响终端启动。\n\n## 配置来源\n\n- PostgreSQL：`DATABASE_URL`、`PGHOST`、`PGPORT`、`PGUSER`、`PGDATABASE`、`PGSERVICE`、`~/.pg_service.conf` 和客户端默认配置；\n- MySQL：`MYSQL_HOST`、`MYSQL_TCP_PORT`、`MYSQL_USER`、`MYSQL_DATABASE`、`~/.my.cnf` 和客户端默认配置；\n- SQLite：`TERGO_DB_SQLITE`、`SQLITE_DATABASE` 或 `DATABASE_FILE`；\n- Redis：`REDIS_URL`、`REDIS_HOST`、`REDIS_PORT` 和 `REDISCLI_AUTH`。\n\n`tergo-db-config` 只报告哪些来源已设置，不显示值。密码、连接串和 Token 不应作为命令面板参数传入。\n\n## 命令\n\n| 命令 | 作用 | 风险 |\n| --- | --- | --- |\n| `tergo-db-report` | 查看客户端安装状态 | 低 |\n| `tergo-db-config` | 查看脱敏后的配置来源 | 低 |\n| `tergo-db-test <backend>` | 执行 `SELECT 1` 或 `PING` | 低 |\n| `tergo-db-tables <backend>` | 查看表或 Redis 部分键名 | 低 |\n| `tergo-db-query <backend> <query>` | 执行受限只读查询 | 低 |\n| `tergo-db-explain <backend> <query>` | 预览查询计划 | 低 |\n| `tergo-db-export <backend> <query>` | 导出只读结果到 0600 临时文件 | 中 |\n\n`backend` 可以是 `auto`、`postgres`、`mysql`、`sqlite` 或 `redis`。`auto` 只会根据显式环境配置选择数据库，不会在没有目标配置时擅自连接本机服务。\n\nSQL 查询拒绝多语句和常见写操作关键字，只允许 `SELECT`、`WITH`、`SHOW` 或 `DESCRIBE` 开头；Redis 只允许读取类命令。数据库客户端仍然按用户现有权限运行，插件不提供 Shell 沙箱。\n",
+      "updatedAt": "2026-10-28T07:18:25Z"
+    },
     {
       "id": "developer-toolbox",
       "name": "开发者工具箱",
@@ -10,7 +120,10 @@
       "author": "Tergo Contributors",
       "category": "productivity",
       "license": "MIT",
-      "packageUrl": "https://plugins.tergo.dev/packages/developer-toolbox-0.1.0.tergo-plugin",
+      "channel": "stable",
+      "verified": true,
+      "packageUrl": "https://wfu-work.github.io/tergo-plugins/packages/developer-toolbox-0.1.0.tergo-plugin",
+      "packageSize": 4857,
       "sha256": "e340483fbd6503bc30a5443a522ca9f7c018afcefe73b55ae6bba0d78d81df8c",
       "source": "official",
       "shells": [
@@ -103,7 +216,7 @@
       ],
       "releaseNotes": "首个公开版本。",
       "readme": "# 开发者工具箱\n\n`developer-toolbox` 为 Tergo 提供项目搜索、文件查找、文件预览、模糊选择、Git 差异阅读和目录体积分析。\n\n插件优先使用 `rg`、`fd`、`fzf`、`bat` 和 `delta`。这些工具都是可选依赖：缺少时会回退到系统自带的 `grep`、`find`、`sed` 和 Git 输出，不会阻止终端启动。\n\n## 命令\n\n| 命令 | 作用 |\n| --- | --- |\n| `tergo-search` | 在项目根目录搜索文本 |\n| `tergo-files` | 按文件名查找文件 |\n| `tergo-preview` | 预览文件前 240 行 |\n| `tergo-fuzzy-file` | 使用 fzf 选择文件 |\n| `tergo-diff-view` | 阅读当前 Git 差异 |\n| `tergo-size-report` | 查看一级目录体积 |\n| `tergo-tool-report` | 查看可选工具安装状态 |\n\n插件只读取项目文件，不修改工作区。\n",
-      "updatedAt": "2026-10-28T02:27:29Z"
+      "updatedAt": "2026-10-28T07:18:25Z"
     },
     {
       "id": "release-workflow",
@@ -113,7 +226,10 @@
       "author": "Tergo Contributors",
       "category": "release",
       "license": "MIT",
-      "packageUrl": "https://plugins.tergo.dev/packages/release-workflow-0.1.0.tergo-plugin",
+      "channel": "stable",
+      "verified": true,
+      "packageUrl": "https://wfu-work.github.io/tergo-plugins/packages/release-workflow-0.1.0.tergo-plugin",
+      "packageSize": 7001,
       "sha256": "139362a22ffb27b92d1b61377891bd359dcbcd4c97a8c85d28cc2901a2562c5c",
       "source": "official",
       "shells": [
@@ -199,7 +315,7 @@
       ],
       "releaseNotes": "首个公开版本。",
       "readme": "# 发布工作流\n\n`release-workflow` 将常见的提交检查、变更摘要、版本检查和发布预览接入 Tergo。所有写操作都经过 Tergo 风险确认；插件只创建本地 Git tag，不会自动推送。\n\n## 命令\n\n| 命令 | 作用 | 风险 |\n| --- | --- | --- |\n| `tergo-release-status` | 查看分支、工作区、上游和最近标签 | 低 |\n| `tergo-release-commit-check` | 校验最近提交格式 | 低 |\n| `tergo-release-changelog` | 生成 Markdown 变更摘要 | 低 |\n| `tergo-release-version-check` | 检查项目版本字段 | 低 |\n| `tergo-release-preview` | 预览发布标签操作 | 中 |\n| `tergo-release-tag` | 创建本地 annotated tag | 高 |\n\n提交格式检查支持 `feat`、`fix`、`docs`、`style`、`refactor`、`perf`、`test`、`build`、`ci`、`chore` 和 `revert`。发布标签要求使用 SemVer，例如 `1.2.3` 或 `v1.2.3`，并且工作区必须干净。\n",
-      "updatedAt": "2026-10-28T02:27:29Z",
+      "updatedAt": "2026-10-28T07:18:25Z",
       "healthcheck": {
         "command": "git",
         "args": [
@@ -216,7 +332,10 @@
       "author": "Tergo Contributors",
       "category": "security",
       "license": "MIT",
-      "packageUrl": "https://plugins.tergo.dev/packages/security-scanner-0.1.0.tergo-plugin",
+      "channel": "stable",
+      "verified": true,
+      "packageUrl": "https://wfu-work.github.io/tergo-plugins/packages/security-scanner-0.1.0.tergo-plugin",
+      "packageSize": 5080,
       "sha256": "40e193bc02e9c3e9240437ea66f0e62b612e2c81d45cbc2b30e45723f447cdbc",
       "source": "official",
       "shells": [
@@ -294,7 +413,7 @@
       ],
       "releaseNotes": "首个公开版本。",
       "readme": "# 项目安全扫描\n\n`security-scanner` 把常见的提交前安全检查接入 Tergo 命令面板。扫描器没有安装时，插件仍然可以加载，并会在调用命令时给出安装提示。\n\n## 命令\n\n| 命令 | 作用 | 依赖 |\n| --- | --- | --- |\n| `tergo-secret-scan` | 扫描疑似密钥，结果脱敏 | `gitleaks` |\n| `tergo-dependency-scan` | 扫描依赖漏洞 | `osv-scanner` |\n| `tergo-code-scan` | 执行 Semgrep 规则扫描 | `semgrep` |\n| `tergo-security-report` | 输出扫描范围和工具版本 | `git` |\n| `tergo-security-baseline` | 预览临时脱敏基线报告 | `gitleaks` |\n\n扫描结果不会上传到 Tergo。Semgrep 使用 `auto` 规则时可能根据自身配置下载规则，网络权限因此在清单中显式声明。插件不会读取或打印环境变量，也不会自动修改 `.gitignore`、配置文件或源码。\n",
-      "updatedAt": "2026-10-28T02:27:29Z",
+      "updatedAt": "2026-10-28T07:18:25Z",
       "healthcheck": {
         "command": "git",
         "args": [

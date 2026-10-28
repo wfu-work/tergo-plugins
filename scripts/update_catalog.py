@@ -11,6 +11,7 @@ from pathlib import Path
 
 
 CATEGORIES = {
+    "database-workbench": "database",
     "developer-toolbox": "productivity",
     "security-scanner": "security",
     "release-workflow": "release",
@@ -56,7 +57,10 @@ def main() -> int:
             "author": "Tergo Contributors",
             "category": CATEGORIES.get(plugin_id, "utility"),
             "license": "MIT",
+            "channel": "stable",
+            "verified": True,
             "packageUrl": args.base_url.rstrip("/") + "/" + package_name,
+            "packageSize": package_path.stat().st_size,
             "sha256": digest,
             "source": "official",
             "shells": manifest.get("shells", []),
