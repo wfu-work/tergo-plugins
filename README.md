@@ -253,5 +253,5 @@ tergo-plugins/
 
 ## 建议的第一批发布顺序
 
-优先落地 `developer-toolbox`、`database-workbench`、`security-scanner`、`release-workflow`、`api-workbench`、`ci-workflow` 和 `flutter-workflow`。它们依赖常见 CLI、只需命令面板即可提供价值，并且能验证在线插件最关键的安装、诊断、风险确认、日志脱敏和升级回滚链路。下一阶段再根据安装和使用反馈扩展 `env-doctor`、云厂商、Terraform 和可观测性工作流。
+第一批已落地 `developer-toolbox`、`database-workbench`、`security-scanner`、`release-workflow`、`api-workbench`、`ci-workflow` 和 `flutter-workflow`；阶段 2 已补充 `env-doctor` 与 `python-workflow`。它们依赖常见 CLI、只需命令面板即可提供价值，并且验证了在线插件的安装、诊断、风险确认、日志脱敏和升级回滚链路。下一阶段应根据安装和使用反馈选择云厂商、Kubernetes、容器仓库或 Terraform 工作流。
 

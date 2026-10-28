@@ -119,7 +119,7 @@ Tergo 已有 Pod、日志和资源删除基础能力，在线插件只补 Helm r
 - 为网络插件补充离线 smoke test、超时、临时文件清理和输出脱敏夹具；
 - 保持 `command` 作为唯一正式扩展面，暂不为尚未支持的 `panel` 或 `statusbar` 设计大量插件。
 
-### 阶段 1：P0 两个插件（已完成）
+### 阶段 1：P0 插件（已完成）
 
 `api-workbench`、`ci-workflow` 和面向当前项目用户的 `flutter-workflow` 已交付第一版。每个插件都提供只读命令、依赖报告或预览命令，写操作仍由 Tergo 风险确认保护。
 
