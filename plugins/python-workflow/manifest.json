@@ -1,0 +1,85 @@
+{
+  "manifestVersion": 1,
+  "id": "python-workflow",
+  "name": "Python 工作流",
+  "version": "0.1.0",
+  "description": "探测 Python 环境，运行测试、Lint、类型检查和依赖过期检查。",
+  "category": "language",
+  "shells": ["zsh", "bash"],
+  "entry": {
+    "zsh": "init.zsh",
+    "bash": "init.bash"
+  },
+  "capabilities": ["python", "pytest", "ruff", "mypy", "testing", "diagnostics"],
+  "optionalCommands": ["python3", "python", "uv", "poetry", "pytest", "ruff", "mypy"],
+  "configSources": ["pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "pytest.ini", "uv.lock", "poetry.lock", "VIRTUAL_ENV"],
+  "redaction": {
+    "mode": "omit-values",
+    "fields": ["environment-values", "package-index-credentials"]
+  },
+  "platforms": ["darwin", "linux"],
+  "minTergoVersion": "0.2.0",
+  "permissions": ["filesystem", "process", "network"],
+  "surfaces": ["command"],
+  "commands": [
+    {
+      "id": "report",
+      "name": "查看 Python 工具",
+      "description": "查看解释器、包管理器、测试和检查工具状态，不修改项目。",
+      "command": "tergo-python-report",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "env",
+      "name": "查看 Python 环境",
+      "description": "查看解释器路径、版本和虚拟环境前缀。",
+      "command": "tergo-python-env",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "test",
+      "name": "运行 Python 测试",
+      "description": "使用当前环境的 pytest 运行项目测试。",
+      "command": "tergo-python-test",
+      "mode": "execute",
+      "risk": "medium"
+    },
+    {
+      "id": "lint",
+      "name": "检查 Python 代码",
+      "description": "使用当前环境的 ruff 检查项目代码。",
+      "command": "tergo-python-lint",
+      "mode": "execute",
+      "risk": "medium"
+    },
+    {
+      "id": "typecheck",
+      "name": "检查 Python 类型",
+      "description": "使用当前环境的 mypy 检查项目类型。",
+      "command": "tergo-python-typecheck",
+      "mode": "execute",
+      "risk": "medium"
+    },
+    {
+      "id": "outdated",
+      "name": "检查 Python 依赖",
+      "description": "查看当前环境中可更新的依赖，不执行升级。",
+      "command": "tergo-python-outdated",
+      "mode": "execute",
+      "risk": "medium"
+    },
+    {
+      "id": "install-preview",
+      "name": "预览工具安装",
+      "description": "生成 pytest、ruff 或 mypy 的安装命令，但不执行安装。",
+      "command": "tergo-python-install-preview {{arg:target|all}}",
+      "mode": "execute",
+      "risk": "low",
+      "arguments": [
+        {"name": "target", "label": "工具名称", "description": "pytest、ruff、mypy 或 all", "default": "all"}
+      ]
+    }
+  ]
+}

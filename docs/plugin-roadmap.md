@@ -121,11 +121,11 @@ Tergo 已有 Pod、日志和资源删除基础能力，在线插件只补 Helm r
 
 ### 阶段 1：P0 两个插件（已完成）
 
-`api-workbench`、`ci-workflow` 和面向当前项目用户的 `flutter-workflow` 已交付第一版。每个插件都提供只读命令、依赖报告或预览命令，写操作仍由 Tergo 风险确认保护。下一步根据真实安装和反馈决定是否增加 Python 生态插件。
+`api-workbench`、`ci-workflow` 和面向当前项目用户的 `flutter-workflow` 已交付第一版。每个插件都提供只读命令、依赖报告或预览命令，写操作仍由 Tergo 风险确认保护。
 
-### 阶段 2：生态和环境（2～3 周）
+### 阶段 2：生态和环境（已完成第一版）
 
-选择一个主要生态插件，加上 `env-doctor`。重点验证命令参数、项目目录识别、缺少依赖时的提示和跨 macOS/Linux 行为。
+已交付 `env-doctor` 和 `python-workflow`。环境插件只报告工具版本、版本文件、配置来源和变量名，不输出变量值；Python 插件优先复用当前虚拟环境，支持 pytest、ruff、mypy 和依赖过期检查，缺少可选工具时保留终端启动并给出安装提示。下一步应根据安装反馈选择一个云或基础设施方向。
 
 ### 阶段 3：基础设施（4～6 周）
 
@@ -146,4 +146,4 @@ Tergo 已有 Pod、日志和资源删除基础能力，在线插件只补 Helm r
 
 ## 最终建议
 
-下一步按 `env-doctor` → `cloud-context`/`k8s-helm-release` → `container-registry`/`terraform-workflow` 的顺序推进。P0 已覆盖 API 调试、CI 运行和 Flutter 生态，后续应先补环境可复现性，再进入云和基础设施的高风险领域。
+P0 已覆盖 API 调试、CI 运行和 Flutter 生态，阶段 2 已补足环境可复现性和 Python 生态。下一步按真实用户需求在 `cloud-context`、`k8s-helm-release`、`container-registry` 和 `terraform-workflow` 中选择两个，先做只读和变更预览，再开放高风险写操作。

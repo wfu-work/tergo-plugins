@@ -1,0 +1,66 @@
+{
+  "manifestVersion": 1,
+  "id": "env-doctor",
+  "name": "环境诊断",
+  "version": "0.1.0",
+  "description": "诊断项目工具版本、版本文件、环境变量来源和配置差异，不输出变量值。",
+  "category": "environment",
+  "shells": ["zsh", "bash"],
+  "entry": {
+    "zsh": "init.zsh",
+    "bash": "init.bash"
+  },
+  "capabilities": ["environment", "diagnostics", "dotenv", "tooling"],
+  "optionalCommands": ["mise", "direnv", "python3", "python", "uv", "poetry", "pipx"],
+  "configSources": ["process-environment", ".env", ".env.example", ".envrc", ".python-version", ".tool-versions", "mise.toml", "pyproject.toml", "requirements.txt", "uv.lock", "poetry.lock"],
+  "redaction": {
+    "mode": "names-only",
+    "fields": ["environment-values", "dotenv-values", "credentials", "tokens"]
+  },
+  "platforms": ["darwin", "linux"],
+  "minTergoVersion": "0.2.0",
+  "permissions": ["filesystem", "process"],
+  "surfaces": ["command"],
+  "commands": [
+    {
+      "id": "report",
+      "name": "查看环境报告",
+      "description": "查看项目根目录、工具版本和虚拟环境状态，不输出环境变量值。",
+      "command": "tergo-env-report",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "tools",
+      "name": "查看环境工具",
+      "description": "查看 mise、direnv、Python 和常用环境工具的安装状态。",
+      "command": "tergo-env-tools",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "sources",
+      "name": "查看配置来源",
+      "description": "检查版本文件、dotenv、direnv 和项目配置文件是否存在。",
+      "command": "tergo-env-sources",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "vars",
+      "name": "查看变量状态",
+      "description": "只显示进程环境变量名称，以及 .env.example 中变量是否已设置。",
+      "command": "tergo-env-vars",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "check",
+      "name": "检查必需变量",
+      "description": "根据 .env.example 或 .env.sample 检查变量名称是否已进入进程环境。",
+      "command": "tergo-env-check",
+      "mode": "execute",
+      "risk": "low"
+    }
+  ]
+}

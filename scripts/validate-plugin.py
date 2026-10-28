@@ -21,6 +21,7 @@ SURFACES = {"command", "panel", "file-preview", "settings", "statusbar"}
 MODES = {"execute", "insert"}
 RISKS = {"low", "medium", "high", "critical"}
 CATEGORIES = {"productivity", "database", "security", "release", "api", "ci", "language", "environment", "platform", "docs", "data"}
+REDACTION_MODES = {"none", "names-only", "omit-values"}
 
 
 class ValidationError(Exception):
@@ -104,6 +105,36 @@ def validate_plugin(plugin_dir: Path) -> dict:
         command = command.strip()
         if not COMMAND_RE.fullmatch(command):
             fail(f"invalid required command: {command}")
+
+    optional_commands = manifest.get("optionalCommands", [])
+    if not isinstance(optional_commands, list) or any(not isinstance(value, str) for value in optional_commands):
+        fail("optionalCommands must be a list of strings")
+    for command in optional_commands:
+        command = command.strip()
+        if not COMMAND_RE.fullmatch(command):
+            fail(f"invalid optional command: {command}")
+    overlap = {value.strip() for value in required_commands} & {value.strip() for value in optional_commands}
+    if overlap:
+        fail(f"command cannot be both required and optional: {sorted(overlap)}")
+
+    config_sources = manifest.get("configSources", [])
+    if not isinstance(config_sources, list) or any(not isinstance(value, str) for value in config_sources):
+        fail("configSources must be a list of strings")
+    if any(not value.strip() for value in config_sources):
+        fail("configSources cannot contain empty values")
+
+    redaction = manifest.get("redaction")
+    if redaction is not None:
+        if not isinstance(redaction, dict):
+            fail("redaction must be an object")
+        mode = text(redaction.get("mode"), "redaction.mode", required=True)
+        if mode not in REDACTION_MODES:
+            fail(f"unsupported redaction mode: {mode}")
+        fields = redaction.get("fields", [])
+        if not isinstance(fields, list) or any(not isinstance(value, str) for value in fields):
+            fail("redaction.fields must be a list of strings")
+        if any(not value.strip() for value in fields):
+            fail("redaction.fields cannot contain empty values")
 
     healthcheck = manifest.get("healthcheck")
     if healthcheck is not None:

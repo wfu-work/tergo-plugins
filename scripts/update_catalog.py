@@ -15,6 +15,11 @@ CATEGORIES = {
     "developer-toolbox": "productivity",
     "security-scanner": "security",
     "release-workflow": "release",
+    "api-workbench": "productivity",
+    "ci-workflow": "release",
+    "flutter-workflow": "productivity",
+    "env-doctor": "environment",
+    "python-workflow": "language",
 }
 
 
@@ -66,6 +71,9 @@ def main() -> int:
             "shells": manifest.get("shells", []),
             "capabilities": manifest.get("capabilities", []),
             "requiredCommands": manifest.get("requiredCommands", []),
+            "optionalCommands": manifest.get("optionalCommands", []),
+            "configSources": manifest.get("configSources", []),
+            "redaction": manifest.get("redaction", {"mode": "none", "fields": []}),
             "platforms": manifest.get("platforms", []),
             "minTergoVersion": manifest.get("minTergoVersion", ""),
             "permissions": manifest.get("permissions", []),

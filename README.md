@@ -12,7 +12,7 @@ Tergo 当前已经提供：
 - zsh/bash 私有启动文件注入，不修改用户的 `.zshrc` 或 `.bashrc`；
 - 声明式 `manifest.json`、命令面板、参数输入、快捷键、风险确认和运行记录；
 - Git、Docker/Compose、Git Worktree、SSH、Kubernetes、项目任务、质量检查、运行时诊断、代码托管、远程会话、日志和端口诊断等内置能力；
-- 第一批在线插件包括开发者工具箱、数据库工作台、安全扫描、发布工作流、API 调试工作台、CI 运行工作台和 Flutter 工作流。
+- 在线插件包括开发者工具箱、数据库工作台、安全扫描、发布工作流、API 调试工作台、CI 运行工作台、Flutter 工作流、环境诊断和 Python 工作流。
 
 当前在线插件真正可用的扩展面是 `command`。`panel`、`file-preview`、`settings` 和 `statusbar` 可以写入元数据，但在 Tergo UI 完成对应扩展点前只能作为规划信息，不能把它们当作已经存在的 UI 能力。
 
@@ -66,6 +66,8 @@ https://wfu-work.github.io/tergo-plugins/catalog/index.json
 | P0 | `api-workbench` | 前后端、测试、运维 | 发现请求模板、检查 HTTP 地址、执行只读请求和提取 JSON | `curl`，可选 `jq` | 低到中 |
 | P0 | `ci-workflow` | 团队开发者、平台工程 | 查看 CI 运行、失败日志和构建产物，确认后重跑失败任务 | `gh` 或 `glab` | 中到高 |
 | P0 | `flutter-workflow` | Flutter 开发者 | 环境检查、设备查看、分析、测试、依赖检查和构建预览 | `flutter`、`dart` | 中 |
+| P1 | `env-doctor` | 全栈、平台工程 | 诊断工具版本、项目版本文件、环境变量来源和 `.env` 差异，只显示名称不显示值 | `mise`、`direnv`，其余可选 | 低 |
+| P1 | `python-workflow` | Python 开发者、数据工程 | 探测 Python 环境，运行 pytest、ruff、mypy 和依赖过期检查 | `python3` 或 `python`，其余可选 | 中 |
 | P1 | `cloud-cli-workflow` | 云开发、平台工程 | 统一查看当前账号、区域、资源和最近部署状态，减少记忆 AWS/GCP/Azure CLI 参数 | `aws`、`gcloud`、`az`，按云厂商拆分 | 中到高 |
 | P1 | `terraform-workflow` | IaC、DevOps | 提供 `fmt`、`validate`、`plan`、变更摘要和状态检查，强化 plan 优先 | `terraform` | 高 |
 | P1 | `env-secrets-workflow` | 全栈、平台工程 | 检查当前环境变量来源、切换本地环境、执行脱敏后的环境报告 | `direnv`、`mise`、`doppler` 或 `1password` CLI | 中到高 |
@@ -159,7 +161,9 @@ tergo-plugins/
 │   ├── release-workflow/
 │   ├── api-workbench/
 │   ├── ci-workflow/
-│   └── flutter-workflow/
+│   ├── flutter-workflow/
+│   ├── env-doctor/
+│   └── python-workflow/
 ├── scripts/
 │   ├── package-plugin.sh           # 生成 .tergo-plugin 并计算 SHA-256
 │   ├── validate-plugin.sh          # 本地清单、Shell、依赖校验
@@ -186,6 +190,9 @@ tergo-plugins/
   "shells": ["zsh", "bash"],
   "entry": {"zsh": "init.zsh", "bash": "init.bash"},
   "capabilities": ["search", "files", "git"],
+  "optionalCommands": ["fd", "fzf", "bat"],
+  "configSources": ["project-root"],
+  "redaction": {"mode": "none", "fields": []},
   "requiredCommands": ["rg"],
   "platforms": ["darwin", "linux"],
   "permissions": ["process", "filesystem"],
