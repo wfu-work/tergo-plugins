@@ -1,0 +1,307 @@
+{
+  "version": 1,
+  "updatedAt": "2026-10-28T02:27:29Z",
+  "plugins": [
+    {
+      "id": "developer-toolbox",
+      "name": "开发者工具箱",
+      "description": "项目搜索、文件预览、差异阅读和目录体积分析工作流。",
+      "version": "0.1.0",
+      "author": "Tergo Contributors",
+      "category": "productivity",
+      "license": "MIT",
+      "packageUrl": "https://plugins.tergo.dev/packages/developer-toolbox-0.1.0.tergo-plugin",
+      "sha256": "e340483fbd6503bc30a5443a522ca9f7c018afcefe73b55ae6bba0d78d81df8c",
+      "source": "official",
+      "shells": [
+        "zsh",
+        "bash"
+      ],
+      "capabilities": [
+        "search",
+        "files",
+        "git",
+        "productivity"
+      ],
+      "requiredCommands": [],
+      "platforms": [
+        "darwin",
+        "linux"
+      ],
+      "minTergoVersion": "0.2.0",
+      "permissions": [
+        "filesystem",
+        "process"
+      ],
+      "surfaces": [
+        "command"
+      ],
+      "commands": [
+        {
+          "id": "search",
+          "name": "搜索项目内容",
+          "description": "在项目根目录递归搜索文本内容，自动跳过 .git。",
+          "command": "tergo-search {{arg:query}}",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 1
+        },
+        {
+          "id": "files",
+          "name": "查找项目文件",
+          "description": "按文件名查找项目文件，优先使用 fd，缺少时回退到 find。",
+          "command": "tergo-files {{arg:query|.}}",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 1
+        },
+        {
+          "id": "preview",
+          "name": "预览文件",
+          "description": "预览指定文件的前 240 行，优先使用 bat。",
+          "command": "tergo-preview {{arg:file}}",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 1
+        },
+        {
+          "id": "fuzzy-file",
+          "name": "模糊选择文件",
+          "description": "使用 fzf 交互选择项目文件；缺少 fzf 时输出文件列表。",
+          "command": "tergo-fuzzy-file",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 0
+        },
+        {
+          "id": "diff-view",
+          "name": "阅读 Git 差异",
+          "description": "显示当前工作区差异，优先使用 delta 美化输出。",
+          "command": "tergo-diff-view",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 0
+        },
+        {
+          "id": "size-report",
+          "name": "查看目录体积",
+          "description": "按大小列出项目根目录下的一级文件和目录。",
+          "command": "tergo-size-report",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 0
+        },
+        {
+          "id": "tool-report",
+          "name": "查看工具箱依赖",
+          "description": "查看搜索、预览和差异阅读工具的安装状态。",
+          "command": "tergo-tool-report",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 0
+        }
+      ],
+      "releaseNotes": "首个公开版本。",
+      "readme": "# 开发者工具箱\n\n`developer-toolbox` 为 Tergo 提供项目搜索、文件查找、文件预览、模糊选择、Git 差异阅读和目录体积分析。\n\n插件优先使用 `rg`、`fd`、`fzf`、`bat` 和 `delta`。这些工具都是可选依赖：缺少时会回退到系统自带的 `grep`、`find`、`sed` 和 Git 输出，不会阻止终端启动。\n\n## 命令\n\n| 命令 | 作用 |\n| --- | --- |\n| `tergo-search` | 在项目根目录搜索文本 |\n| `tergo-files` | 按文件名查找文件 |\n| `tergo-preview` | 预览文件前 240 行 |\n| `tergo-fuzzy-file` | 使用 fzf 选择文件 |\n| `tergo-diff-view` | 阅读当前 Git 差异 |\n| `tergo-size-report` | 查看一级目录体积 |\n| `tergo-tool-report` | 查看可选工具安装状态 |\n\n插件只读取项目文件，不修改工作区。\n",
+      "updatedAt": "2026-10-28T02:27:29Z"
+    },
+    {
+      "id": "release-workflow",
+      "name": "发布工作流",
+      "description": "校验提交、生成变更摘要、检查版本并预览发布操作。",
+      "version": "0.1.0",
+      "author": "Tergo Contributors",
+      "category": "release",
+      "license": "MIT",
+      "packageUrl": "https://plugins.tergo.dev/packages/release-workflow-0.1.0.tergo-plugin",
+      "sha256": "139362a22ffb27b92d1b61377891bd359dcbcd4c97a8c85d28cc2901a2562c5c",
+      "source": "official",
+      "shells": [
+        "zsh",
+        "bash"
+      ],
+      "capabilities": [
+        "git",
+        "release",
+        "changelog",
+        "versioning"
+      ],
+      "requiredCommands": [
+        "git"
+      ],
+      "platforms": [
+        "darwin",
+        "linux"
+      ],
+      "minTergoVersion": "0.2.0",
+      "permissions": [
+        "filesystem",
+        "process"
+      ],
+      "surfaces": [
+        "command"
+      ],
+      "commands": [
+        {
+          "id": "status",
+          "name": "检查发布状态",
+          "description": "查看当前分支、工作区、上游和最近标签。",
+          "command": "tergo-release-status",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 0
+        },
+        {
+          "id": "commit-check",
+          "name": "校验提交格式",
+          "description": "检查最近提交是否符合 Conventional Commits。",
+          "command": "tergo-release-commit-check {{arg:count|20}}",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 1
+        },
+        {
+          "id": "changelog",
+          "name": "生成变更摘要",
+          "description": "从指定标签到当前 HEAD 输出 Markdown 变更列表。",
+          "command": "tergo-release-changelog {{arg:from_tag}}",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 1
+        },
+        {
+          "id": "version-check",
+          "name": "检查项目版本",
+          "description": "读取 package.json、Cargo.toml 等文件中的版本并报告。",
+          "command": "tergo-release-version-check",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 0
+        },
+        {
+          "id": "preview",
+          "name": "预览发布操作",
+          "description": "检查工作区并展示将要创建的标签和发布步骤，不执行写操作。",
+          "command": "tergo-release-preview {{arg:version}}",
+          "mode": "execute",
+          "risk": "medium",
+          "argumentCount": 1
+        },
+        {
+          "id": "tag",
+          "name": "创建发布标签",
+          "description": "在干净工作区创建本地 annotated Git tag，不会推送到远程。",
+          "command": "tergo-release-tag {{arg:version}}",
+          "mode": "execute",
+          "risk": "high",
+          "argumentCount": 1
+        }
+      ],
+      "releaseNotes": "首个公开版本。",
+      "readme": "# 发布工作流\n\n`release-workflow` 将常见的提交检查、变更摘要、版本检查和发布预览接入 Tergo。所有写操作都经过 Tergo 风险确认；插件只创建本地 Git tag，不会自动推送。\n\n## 命令\n\n| 命令 | 作用 | 风险 |\n| --- | --- | --- |\n| `tergo-release-status` | 查看分支、工作区、上游和最近标签 | 低 |\n| `tergo-release-commit-check` | 校验最近提交格式 | 低 |\n| `tergo-release-changelog` | 生成 Markdown 变更摘要 | 低 |\n| `tergo-release-version-check` | 检查项目版本字段 | 低 |\n| `tergo-release-preview` | 预览发布标签操作 | 中 |\n| `tergo-release-tag` | 创建本地 annotated tag | 高 |\n\n提交格式检查支持 `feat`、`fix`、`docs`、`style`、`refactor`、`perf`、`test`、`build`、`ci`、`chore` 和 `revert`。发布标签要求使用 SemVer，例如 `1.2.3` 或 `v1.2.3`，并且工作区必须干净。\n",
+      "updatedAt": "2026-10-28T02:27:29Z",
+      "healthcheck": {
+        "command": "git",
+        "args": [
+          "--version"
+        ],
+        "timeoutSeconds": 3
+      }
+    },
+    {
+      "id": "security-scanner",
+      "name": "项目安全扫描",
+      "description": "对当前项目执行密钥、依赖和代码安全扫描，并提供脱敏报告。",
+      "version": "0.1.0",
+      "author": "Tergo Contributors",
+      "category": "security",
+      "license": "MIT",
+      "packageUrl": "https://plugins.tergo.dev/packages/security-scanner-0.1.0.tergo-plugin",
+      "sha256": "40e193bc02e9c3e9240437ea66f0e62b612e2c81d45cbc2b30e45723f447cdbc",
+      "source": "official",
+      "shells": [
+        "zsh",
+        "bash"
+      ],
+      "capabilities": [
+        "security",
+        "secrets",
+        "dependencies",
+        "static-analysis"
+      ],
+      "requiredCommands": [
+        "git"
+      ],
+      "platforms": [
+        "darwin",
+        "linux"
+      ],
+      "minTergoVersion": "0.2.0",
+      "permissions": [
+        "filesystem",
+        "process",
+        "network"
+      ],
+      "surfaces": [
+        "command"
+      ],
+      "commands": [
+        {
+          "id": "secret-scan",
+          "name": "扫描项目密钥",
+          "description": "使用 gitleaks 扫描项目中的疑似密钥，输出脱敏结果。",
+          "command": "tergo-secret-scan",
+          "mode": "execute",
+          "risk": "medium",
+          "argumentCount": 0
+        },
+        {
+          "id": "dependency-scan",
+          "name": "扫描依赖漏洞",
+          "description": "使用 osv-scanner 扫描项目依赖漏洞。",
+          "command": "tergo-dependency-scan",
+          "mode": "execute",
+          "risk": "medium",
+          "argumentCount": 0
+        },
+        {
+          "id": "code-scan",
+          "name": "扫描代码风险",
+          "description": "使用 Semgrep 执行代码规则扫描；结果不会自动上传。",
+          "command": "tergo-code-scan",
+          "mode": "execute",
+          "risk": "medium",
+          "argumentCount": 0
+        },
+        {
+          "id": "security-report",
+          "name": "生成安全环境报告",
+          "description": "输出扫描范围、Git 状态和工具版本，不输出环境变量。",
+          "command": "tergo-security-report",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 0
+        },
+        {
+          "id": "baseline-preview",
+          "name": "预览密钥扫描基线",
+          "description": "在临时文件中生成脱敏扫描报告，不修改项目忽略文件。",
+          "command": "tergo-security-baseline",
+          "mode": "execute",
+          "risk": "medium",
+          "argumentCount": 0
+        }
+      ],
+      "releaseNotes": "首个公开版本。",
+      "readme": "# 项目安全扫描\n\n`security-scanner` 把常见的提交前安全检查接入 Tergo 命令面板。扫描器没有安装时，插件仍然可以加载，并会在调用命令时给出安装提示。\n\n## 命令\n\n| 命令 | 作用 | 依赖 |\n| --- | --- | --- |\n| `tergo-secret-scan` | 扫描疑似密钥，结果脱敏 | `gitleaks` |\n| `tergo-dependency-scan` | 扫描依赖漏洞 | `osv-scanner` |\n| `tergo-code-scan` | 执行 Semgrep 规则扫描 | `semgrep` |\n| `tergo-security-report` | 输出扫描范围和工具版本 | `git` |\n| `tergo-security-baseline` | 预览临时脱敏基线报告 | `gitleaks` |\n\n扫描结果不会上传到 Tergo。Semgrep 使用 `auto` 规则时可能根据自身配置下载规则，网络权限因此在清单中显式声明。插件不会读取或打印环境变量，也不会自动修改 `.gitignore`、配置文件或源码。\n",
+      "updatedAt": "2026-10-28T02:27:29Z",
+      "healthcheck": {
+        "command": "git",
+        "args": [
+          "--version"
+        ],
+        "timeoutSeconds": 3
+      }
+    }
+  ]
+}

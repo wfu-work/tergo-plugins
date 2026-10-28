@@ -1,0 +1,84 @@
+{
+  "manifestVersion": 1,
+  "id": "developer-toolbox",
+  "name": "开发者工具箱",
+  "version": "0.1.0",
+  "description": "项目搜索、文件预览、差异阅读和目录体积分析工作流。",
+  "shells": ["zsh", "bash"],
+  "entry": {
+    "zsh": "init.zsh",
+    "bash": "init.bash"
+  },
+  "capabilities": ["search", "files", "git", "productivity"],
+  "platforms": ["darwin", "linux"],
+  "minTergoVersion": "0.2.0",
+  "permissions": ["filesystem", "process"],
+  "surfaces": ["command"],
+  "commands": [
+    {
+      "id": "search",
+      "name": "搜索项目内容",
+      "description": "在项目根目录递归搜索文本内容，自动跳过 .git。",
+      "command": "tergo-search {{arg:query}}",
+      "mode": "execute",
+      "risk": "low",
+      "arguments": [
+        {"name": "query", "label": "搜索关键词", "required": true}
+      ]
+    },
+    {
+      "id": "files",
+      "name": "查找项目文件",
+      "description": "按文件名查找项目文件，优先使用 fd，缺少时回退到 find。",
+      "command": "tergo-files {{arg:query|.}}",
+      "mode": "execute",
+      "risk": "low",
+      "arguments": [
+        {"name": "query", "label": "文件名关键词", "default": "."}
+      ]
+    },
+    {
+      "id": "preview",
+      "name": "预览文件",
+      "description": "预览指定文件的前 240 行，优先使用 bat。",
+      "command": "tergo-preview {{arg:file}}",
+      "mode": "execute",
+      "risk": "low",
+      "arguments": [
+        {"name": "file", "label": "文件路径", "required": true}
+      ]
+    },
+    {
+      "id": "fuzzy-file",
+      "name": "模糊选择文件",
+      "description": "使用 fzf 交互选择项目文件；缺少 fzf 时输出文件列表。",
+      "command": "tergo-fuzzy-file",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "diff-view",
+      "name": "阅读 Git 差异",
+      "description": "显示当前工作区差异，优先使用 delta 美化输出。",
+      "command": "tergo-diff-view",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "size-report",
+      "name": "查看目录体积",
+      "description": "按大小列出项目根目录下的一级文件和目录。",
+      "command": "tergo-size-report",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "tool-report",
+      "name": "查看工具箱依赖",
+      "description": "查看搜索、预览和差异阅读工具的安装状态。",
+      "command": "tergo-tool-report",
+      "mode": "execute",
+      "risk": "low"
+    }
+  ]
+}

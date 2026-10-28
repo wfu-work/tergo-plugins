@@ -1,0 +1,85 @@
+{
+  "manifestVersion": 1,
+  "id": "release-workflow",
+  "name": "发布工作流",
+  "version": "0.1.0",
+  "description": "校验提交、生成变更摘要、检查版本并预览发布操作。",
+  "shells": ["zsh", "bash"],
+  "entry": {
+    "zsh": "init.zsh",
+    "bash": "init.bash"
+  },
+  "capabilities": ["git", "release", "changelog", "versioning"],
+  "requiredCommands": ["git"],
+  "platforms": ["darwin", "linux"],
+  "minTergoVersion": "0.2.0",
+  "permissions": ["filesystem", "process"],
+  "healthcheck": {
+    "command": "git",
+    "args": ["--version"],
+    "timeoutSeconds": 3
+  },
+  "surfaces": ["command"],
+  "commands": [
+    {
+      "id": "status",
+      "name": "检查发布状态",
+      "description": "查看当前分支、工作区、上游和最近标签。",
+      "command": "tergo-release-status",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "commit-check",
+      "name": "校验提交格式",
+      "description": "检查最近提交是否符合 Conventional Commits。",
+      "command": "tergo-release-commit-check {{arg:count|20}}",
+      "mode": "execute",
+      "risk": "low",
+      "arguments": [
+        {"name": "count", "label": "检查提交数", "default": "20"}
+      ]
+    },
+    {
+      "id": "changelog",
+      "name": "生成变更摘要",
+      "description": "从指定标签到当前 HEAD 输出 Markdown 变更列表。",
+      "command": "tergo-release-changelog {{arg:from_tag}}",
+      "mode": "execute",
+      "risk": "low",
+      "arguments": [
+        {"name": "from_tag", "label": "起始标签", "description": "留空时使用最近标签"}
+      ]
+    },
+    {
+      "id": "version-check",
+      "name": "检查项目版本",
+      "description": "读取 package.json、Cargo.toml 等文件中的版本并报告。",
+      "command": "tergo-release-version-check",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "preview",
+      "name": "预览发布操作",
+      "description": "检查工作区并展示将要创建的标签和发布步骤，不执行写操作。",
+      "command": "tergo-release-preview {{arg:version}}",
+      "mode": "execute",
+      "risk": "medium",
+      "arguments": [
+        {"name": "version", "label": "版本号", "required": true}
+      ]
+    },
+    {
+      "id": "tag",
+      "name": "创建发布标签",
+      "description": "在干净工作区创建本地 annotated Git tag，不会推送到远程。",
+      "command": "tergo-release-tag {{arg:version}}",
+      "mode": "execute",
+      "risk": "high",
+      "arguments": [
+        {"name": "version", "label": "版本号", "required": true}
+      ]
+    }
+  ]
+}

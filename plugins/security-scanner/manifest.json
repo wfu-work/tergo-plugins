@@ -1,0 +1,65 @@
+{
+  "manifestVersion": 1,
+  "id": "security-scanner",
+  "name": "项目安全扫描",
+  "version": "0.1.0",
+  "description": "对当前项目执行密钥、依赖和代码安全扫描，并提供脱敏报告。",
+  "shells": ["zsh", "bash"],
+  "entry": {
+    "zsh": "init.zsh",
+    "bash": "init.bash"
+  },
+  "capabilities": ["security", "secrets", "dependencies", "static-analysis"],
+  "requiredCommands": ["git"],
+  "platforms": ["darwin", "linux"],
+  "minTergoVersion": "0.2.0",
+  "permissions": ["filesystem", "process", "network"],
+  "healthcheck": {
+    "command": "git",
+    "args": ["--version"],
+    "timeoutSeconds": 3
+  },
+  "surfaces": ["command"],
+  "commands": [
+    {
+      "id": "secret-scan",
+      "name": "扫描项目密钥",
+      "description": "使用 gitleaks 扫描项目中的疑似密钥，输出脱敏结果。",
+      "command": "tergo-secret-scan",
+      "mode": "execute",
+      "risk": "medium"
+    },
+    {
+      "id": "dependency-scan",
+      "name": "扫描依赖漏洞",
+      "description": "使用 osv-scanner 扫描项目依赖漏洞。",
+      "command": "tergo-dependency-scan",
+      "mode": "execute",
+      "risk": "medium"
+    },
+    {
+      "id": "code-scan",
+      "name": "扫描代码风险",
+      "description": "使用 Semgrep 执行代码规则扫描；结果不会自动上传。",
+      "command": "tergo-code-scan",
+      "mode": "execute",
+      "risk": "medium"
+    },
+    {
+      "id": "security-report",
+      "name": "生成安全环境报告",
+      "description": "输出扫描范围、Git 状态和工具版本，不输出环境变量。",
+      "command": "tergo-security-report",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "baseline-preview",
+      "name": "预览密钥扫描基线",
+      "description": "在临时文件中生成脱敏扫描报告，不修改项目忽略文件。",
+      "command": "tergo-security-baseline",
+      "mode": "execute",
+      "risk": "medium"
+    }
+  ]
+}
