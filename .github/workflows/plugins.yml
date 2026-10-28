@@ -68,6 +68,8 @@ jobs:
         env:
           TERGO_PLUGIN_BASE_URL: https://wfu-work.github.io/tergo-plugins/packages
         run: ./scripts/build-site.sh
+      - name: Verify static site entrypoint
+        run: test -s site/index.html
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload Pages artifact

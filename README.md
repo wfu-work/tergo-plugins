@@ -27,10 +27,11 @@ Tergo 当前已经提供：
 官方目录发布在 GitHub Pages：
 
 ```text
+https://wfu-work.github.io/tergo-plugins/
 https://wfu-work.github.io/tergo-plugins/catalog/index.json
 ```
 
-插件包发布在同一站点的 `packages/` 路径。`.github/workflows/plugins.yml` 会在 Pull Request 中校验清单和 Shell，在 `main` 或版本标签推送时生成静态目录、部署 Pages，并为版本标签创建 GitHub Release 资产。Tergo 只读取目录和不可变的 `.tergo-plugin` 包，不读取 GitHub 源码文件。
+首页用于人工浏览插件，机器目录仍使用 `catalog/index.json`。插件包发布在同一站点的 `packages/` 路径。`.github/workflows/plugins.yml` 会在 Pull Request 中校验清单和 Shell，在 `main` 或版本标签推送时生成静态目录、部署 Pages，并为版本标签创建 GitHub Release 资产。Tergo 只读取目录和不可变的 `.tergo-plugin` 包，不读取 GitHub 源码文件。
 
 目录中的 `channel` 使用 `stable`、`beta` 或 `nightly`；`verified: true` 表示该包由官方目录发布者审核，属于展示元数据，不替代 Tergo 下载时执行的 SHA-256 完整性校验。包大小和摘要由打包脚本从最终 `.tergo-plugin` 文件重新计算，不能手工填写。
 
