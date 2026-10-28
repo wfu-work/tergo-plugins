@@ -4,6 +4,7 @@
   "name": "项目安全扫描",
   "version": "0.1.0",
   "description": "对当前项目执行密钥、依赖和代码安全扫描，并提供脱敏报告。",
+  "category": "security",
   "shells": ["zsh", "bash"],
   "entry": {
     "zsh": "init.zsh",

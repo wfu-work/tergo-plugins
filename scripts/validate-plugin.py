@@ -20,6 +20,7 @@ PERMISSIONS = {"network", "filesystem", "process"}
 SURFACES = {"command", "panel", "file-preview", "settings", "statusbar"}
 MODES = {"execute", "insert"}
 RISKS = {"low", "medium", "high", "critical"}
+CATEGORIES = {"productivity", "database", "security", "release", "api", "ci", "language", "environment", "platform", "docs", "data"}
 
 
 class ValidationError(Exception):
@@ -60,6 +61,9 @@ def validate_plugin(plugin_dir: Path) -> dict:
     version = text(manifest.get("version"), "version", required=True)
     if not VERSION_RE.fullmatch(version):
         fail(f"invalid version: {version}")
+    category = text(manifest.get("category", "utility"), "category", required=True).lower()
+    if category not in CATEGORIES and category != "utility":
+        fail(f"unsupported category: {category}")
 
     shells = manifest.get("shells")
     if not isinstance(shells, list) or not shells:

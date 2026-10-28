@@ -2,6 +2,8 @@
 
 这个目录用于维护可通过 Tergo 插件市场安装的在线插件。插件以独立目录发布，最终打包成 `.tergo-plugin` 或 `.zip`，由市场目录提供版本、依赖、权限和 SHA-256 信息。
 
+新增插件的优先级、边界和分阶段实施方案见 [在线插件路线图](docs/plugin-roadmap.md)。
+
 ## 现有能力和边界
 
 Tergo 当前已经提供：
@@ -10,7 +12,7 @@ Tergo 当前已经提供：
 - zsh/bash 私有启动文件注入，不修改用户的 `.zshrc` 或 `.bashrc`；
 - 声明式 `manifest.json`、命令面板、参数输入、快捷键、风险确认和运行记录；
 - Git、Docker/Compose、Git Worktree、SSH、Kubernetes、项目任务、质量检查、运行时诊断、代码托管、远程会话、日志和端口诊断等内置能力；
-- 第一批在线插件包括开发者工具箱、数据库工作台、安全扫描和发布工作流。
+- 第一批在线插件包括开发者工具箱、数据库工作台、安全扫描、发布工作流、API 调试工作台、CI 运行工作台和 Flutter 工作流。
 
 当前在线插件真正可用的扩展面是 `command`。`panel`、`file-preview`、`settings` 和 `statusbar` 可以写入元数据，但在 Tergo UI 完成对应扩展点前只能作为规划信息，不能把它们当作已经存在的 UI 能力。
 
@@ -61,9 +63,11 @@ https://wfu-work.github.io/tergo-plugins/catalog/index.json
 | P0 | `database-workbench` | 后端、数据、运维 | 统一连接 PostgreSQL、MySQL、SQLite、Redis，提供连接测试、库表查看、查询模板和安全导出 | `psql`、`mysql`、`sqlite3`、`redis-cli` | 中 |
 | P0 | `security-scanner` | 开发、平台、安全 | 一键运行密钥、依赖和代码扫描，生成可复制的本地报告 | `gitleaks`、`osv-scanner`、`semgrep` | 中 |
 | P0 | `release-workflow` | 团队开发者 | 从当前 Git 状态生成变更摘要、校验 Conventional Commits、预览 changelog 和版本发布步骤 | `git`，可选 `pnpm`/`npm`/`changeset` | 中 |
+| P0 | `api-workbench` | 前后端、测试、运维 | 发现请求模板、检查 HTTP 地址、执行只读请求和提取 JSON | `curl`，可选 `jq` | 低到中 |
+| P0 | `ci-workflow` | 团队开发者、平台工程 | 查看 CI 运行、失败日志和构建产物，确认后重跑失败任务 | `gh` 或 `glab` | 中到高 |
+| P0 | `flutter-workflow` | Flutter 开发者 | 环境检查、设备查看、分析、测试、依赖检查和构建预览 | `flutter`、`dart` | 中 |
 | P1 | `cloud-cli-workflow` | 云开发、平台工程 | 统一查看当前账号、区域、资源和最近部署状态，减少记忆 AWS/GCP/Azure CLI 参数 | `aws`、`gcloud`、`az`，按云厂商拆分 | 中到高 |
 | P1 | `terraform-workflow` | IaC、DevOps | 提供 `fmt`、`validate`、`plan`、变更摘要和状态检查，强化 plan 优先 | `terraform` | 高 |
-| P1 | `api-workbench` | 前后端、测试、运维 | 用项目级请求模板执行 HTTP 调试、OpenAPI 操作和 JSON 提取，补充现有端口/HTTP 检查 | `curl`、`jq`，可选 `httpie`/`xh` | 中 |
 | P1 | `env-secrets-workflow` | 全栈、平台工程 | 检查当前环境变量来源、切换本地环境、执行脱敏后的环境报告 | `direnv`、`mise`、`doppler` 或 `1password` CLI | 中到高 |
 | P1 | `observability-tools` | SRE、后端 | 查看 Sentry、Grafana/Loki、云日志和告警摘要，优先链接到详情而不是把凭据带入 Shell | 对应官方 CLI 或 API 工具 | 中 |
 | P2 | `container-registry` | 发布、平台工程 | 登录状态、镜像标签、镜像体积和清理预览，覆盖 GHCR、ECR、Docker Hub 等 | `docker`、对应云 CLI | 中到高 |
@@ -152,7 +156,10 @@ tergo-plugins/
 │   │   └── LICENSE
 │   ├── database-workbench/
 │   ├── security-scanner/
-│   └── release-workflow/
+│   ├── release-workflow/
+│   ├── api-workbench/
+│   ├── ci-workflow/
+│   └── flutter-workflow/
 ├── scripts/
 │   ├── package-plugin.sh           # 生成 .tergo-plugin 并计算 SHA-256
 │   ├── validate-plugin.sh          # 本地清单、Shell、依赖校验
@@ -175,6 +182,7 @@ tergo-plugins/
   "name": "开发者工具箱",
   "version": "0.1.0",
   "description": "项目搜索、文件预览和差异阅读工作流。",
+  "category": "productivity",
   "shells": ["zsh", "bash"],
   "entry": {"zsh": "init.zsh", "bash": "init.bash"},
   "capabilities": ["search", "files", "git"],
@@ -238,5 +246,5 @@ tergo-plugins/
 
 ## 建议的第一批发布顺序
 
-优先落地 `developer-toolbox`、`database-workbench`、`security-scanner`、`release-workflow`。它们依赖常见 CLI、只需命令面板即可提供价值，并且能验证在线插件最关键的安装、诊断、风险确认、日志脱敏和升级回滚链路。当前四个插件已经完成目录、打包和 smoke test 接入，后续迭代再扩展云厂商、API 和可观测性工作流。
+优先落地 `developer-toolbox`、`database-workbench`、`security-scanner`、`release-workflow`、`api-workbench`、`ci-workflow` 和 `flutter-workflow`。它们依赖常见 CLI、只需命令面板即可提供价值，并且能验证在线插件最关键的安装、诊断、风险确认、日志脱敏和升级回滚链路。下一阶段再根据安装和使用反馈扩展 `env-doctor`、云厂商、Terraform 和可观测性工作流。
 

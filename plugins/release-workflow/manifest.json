@@ -4,6 +4,7 @@
   "name": "发布工作流",
   "version": "0.1.0",
   "description": "校验提交、生成变更摘要、检查版本并预览发布操作。",
+  "category": "release",
   "shells": ["zsh", "bash"],
   "entry": {
     "zsh": "init.zsh",

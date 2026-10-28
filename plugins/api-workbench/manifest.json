@@ -1,0 +1,76 @@
+{
+  "manifestVersion": 1,
+  "id": "api-workbench",
+  "name": "API 调试工作台",
+  "version": "0.1.0",
+  "description": "发现项目请求模板，执行安全的 HTTP 检查并提取 JSON 响应。",
+  "category": "productivity",
+  "shells": ["zsh", "bash"],
+  "entry": {
+    "zsh": "init.zsh",
+    "bash": "init.bash"
+  },
+  "capabilities": ["api", "http", "json", "openapi", "diagnostics"],
+  "requiredCommands": ["curl"],
+  "platforms": ["darwin", "linux"],
+  "minTergoVersion": "0.2.0",
+  "permissions": ["network", "filesystem", "process"],
+  "healthcheck": {
+    "command": "curl",
+    "args": ["--version"],
+    "timeoutSeconds": 3
+  },
+  "surfaces": ["command"],
+  "commands": [
+    {
+      "id": "report",
+      "name": "查看 API 工具",
+      "description": "查看 curl、jq 和项目请求模板状态，不发起网络请求。",
+      "command": "tergo-api-report",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "list",
+      "name": "发现 API 请求",
+      "description": "列出项目中的 .http、.rest、OpenAPI 和 Swagger 文件。",
+      "command": "tergo-api-list",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "inspect",
+      "name": "检查 API 地址",
+      "description": "执行安全的 HTTP 检查，显示状态、响应头、耗时和最终地址。",
+      "command": "tergo-api-inspect {{arg:url}}",
+      "mode": "execute",
+      "risk": "low",
+      "arguments": [
+        {"name": "url", "label": "API 地址", "required": true}
+      ]
+    },
+    {
+      "id": "run",
+      "name": "运行 API 请求模板",
+      "description": "执行请求文件中的 GET、HEAD 或 OPTIONS 请求，跳过敏感认证头。",
+      "command": "tergo-api-run {{arg:request}}",
+      "mode": "execute",
+      "risk": "low",
+      "arguments": [
+        {"name": "request", "label": "请求文件", "description": "项目内 .http 或 .rest 文件", "required": true}
+      ]
+    },
+    {
+      "id": "json",
+      "name": "提取 JSON 响应",
+      "description": "请求 HTTP/HTTPS 地址并用 jq 提取 JSON 字段。",
+      "command": "tergo-api-json {{arg:url}} {{arg:filter|.}}",
+      "mode": "execute",
+      "risk": "low",
+      "arguments": [
+        {"name": "url", "label": "API 地址", "required": true},
+        {"name": "filter", "label": "jq 过滤器", "default": "."}
+      ]
+    }
+  ]
+}

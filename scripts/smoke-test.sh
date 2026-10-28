@@ -38,5 +38,11 @@ run_zsh 'cd "$1"; source "$2/security-scanner/init.zsh"; tergo-security-report >
 run_bash 'cd "$1"; source "$2/security-scanner/init.bash"; tergo-security-report >/dev/null'
 run_zsh 'cd "$1"; source "$2/database-workbench/init.zsh"; tergo-db-report >/dev/null; tergo-db-config >/dev/null; if tergo-db-query postgres "UPDATE smoke SET value=1" >/dev/null 2>&1; then exit 1; fi'
 run_bash 'cd "$1"; source "$2/database-workbench/init.bash"; tergo-db-report >/dev/null; tergo-db-config >/dev/null; if tergo-db-query postgres "UPDATE smoke SET value=1" >/dev/null 2>&1; then exit 1; fi'
+run_zsh 'cd "$1"; source "$2/api-workbench/init.zsh"; tergo-api-report >/dev/null; tergo-api-list >/dev/null; if tergo-api-inspect ftp://invalid.test >/dev/null 2>&1; then exit 1; fi'
+run_bash 'cd "$1"; source "$2/api-workbench/init.bash"; tergo-api-report >/dev/null; tergo-api-list >/dev/null; if tergo-api-inspect ftp://invalid.test >/dev/null 2>&1; then exit 1; fi'
+run_zsh 'cd "$1"; source "$2/ci-workflow/init.zsh"; tergo-ci-report >/dev/null'
+run_bash 'cd "$1"; source "$2/ci-workflow/init.bash"; tergo-ci-report >/dev/null'
+run_zsh 'cd "$1"; source "$2/flutter-workflow/init.zsh"; tergo-flutter-report >/dev/null'
+run_bash 'cd "$1"; source "$2/flutter-workflow/init.bash"; tergo-flutter-report >/dev/null'
 
 printf '%s\n' 'online plugin smoke tests passed'

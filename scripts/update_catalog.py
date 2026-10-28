@@ -55,7 +55,7 @@ def main() -> int:
             "description": manifest.get("description", ""),
             "version": version,
             "author": "Tergo Contributors",
-            "category": CATEGORIES.get(plugin_id, "utility"),
+            "category": manifest.get("category", CATEGORIES.get(plugin_id, "utility")),
             "license": "MIT",
             "channel": "stable",
             "verified": True,

@@ -4,6 +4,7 @@
   "name": "数据库工作台",
   "version": "0.1.0",
   "description": "从现有环境配置安全检查 PostgreSQL、MySQL、SQLite 和 Redis。",
+  "category": "database",
   "shells": ["zsh", "bash"],
   "entry": {
     "zsh": "init.zsh",

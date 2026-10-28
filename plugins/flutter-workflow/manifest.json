@@ -1,0 +1,79 @@
+{
+  "manifestVersion": 1,
+  "id": "flutter-workflow",
+  "name": "Flutter 工作流",
+  "version": "0.1.0",
+  "description": "检查 Flutter 环境、分析项目、运行测试并预览构建目标。",
+  "category": "productivity",
+  "shells": ["zsh", "bash"],
+  "entry": {
+    "zsh": "init.zsh",
+    "bash": "init.bash"
+  },
+  "capabilities": ["flutter", "dart", "mobile", "testing", "diagnostics"],
+  "platforms": ["darwin", "linux"],
+  "minTergoVersion": "0.2.0",
+  "permissions": ["filesystem", "process", "network"],
+  "surfaces": ["command"],
+  "commands": [
+    {
+      "id": "report",
+      "name": "查看 Flutter 工具",
+      "description": "查看 Flutter、Dart 和当前项目状态，不修改项目。",
+      "command": "tergo-flutter-report",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "doctor",
+      "name": "检查 Flutter 环境",
+      "description": "运行 flutter doctor，汇总 SDK、设备和平台工具状态。",
+      "command": "tergo-flutter-doctor",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "devices",
+      "name": "查看 Flutter 设备",
+      "description": "列出当前可用的模拟器、真机和桌面设备。",
+      "command": "tergo-flutter-devices",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "analyze",
+      "name": "分析 Flutter 项目",
+      "description": "运行 flutter analyze 检查当前项目代码。",
+      "command": "tergo-flutter-analyze",
+      "mode": "execute",
+      "risk": "medium"
+    },
+    {
+      "id": "test",
+      "name": "运行 Flutter 测试",
+      "description": "运行当前项目的 Flutter 测试并返回失败摘要。",
+      "command": "tergo-flutter-test",
+      "mode": "execute",
+      "risk": "medium"
+    },
+    {
+      "id": "pub-outdated",
+      "name": "检查 Flutter 依赖",
+      "description": "检查 pub 依赖更新，不自动修改 pubspec 或 lock 文件。",
+      "command": "tergo-flutter-pub-outdated",
+      "mode": "execute",
+      "risk": "medium"
+    },
+    {
+      "id": "build-preview",
+      "name": "预览 Flutter 构建",
+      "description": "展示指定平台的构建命令，不执行构建或发布。",
+      "command": "tergo-flutter-build-preview {{arg:target|ios}}",
+      "mode": "execute",
+      "risk": "low",
+      "arguments": [
+        {"name": "target", "label": "构建平台", "description": "ios、android、web、macos、linux 或 windows", "default": "ios"}
+      ]
+    }
+  ]
+}

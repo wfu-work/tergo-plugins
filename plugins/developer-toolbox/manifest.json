@@ -4,6 +4,7 @@
   "name": "开发者工具箱",
   "version": "0.1.0",
   "description": "项目搜索、文件预览、差异阅读和目录体积分析工作流。",
+  "category": "productivity",
   "shells": ["zsh", "bash"],
   "entry": {
     "zsh": "init.zsh",

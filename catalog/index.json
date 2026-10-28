@@ -1,7 +1,205 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-28T07:18:25Z",
+  "updatedAt": "2026-10-28T10:06:21Z",
   "plugins": [
+    {
+      "id": "api-workbench",
+      "name": "API 调试工作台",
+      "description": "发现项目请求模板，执行安全的 HTTP 检查并提取 JSON 响应。",
+      "version": "0.1.0",
+      "author": "Tergo Contributors",
+      "category": "productivity",
+      "license": "MIT",
+      "channel": "stable",
+      "verified": true,
+      "packageUrl": "https://wfu-work.github.io/tergo-plugins/packages/api-workbench-0.1.0.tergo-plugin",
+      "packageSize": 6882,
+      "sha256": "80eafb823e08eefdc55d18a9016dcc6d414c9db8c5b7fa3f06b137b5b8d751f6",
+      "source": "official",
+      "shells": [
+        "zsh",
+        "bash"
+      ],
+      "capabilities": [
+        "api",
+        "http",
+        "json",
+        "openapi",
+        "diagnostics"
+      ],
+      "requiredCommands": [
+        "curl"
+      ],
+      "platforms": [
+        "darwin",
+        "linux"
+      ],
+      "minTergoVersion": "0.2.0",
+      "permissions": [
+        "network",
+        "filesystem",
+        "process"
+      ],
+      "surfaces": [
+        "command"
+      ],
+      "commands": [
+        {
+          "id": "report",
+          "name": "查看 API 工具",
+          "description": "查看 curl、jq 和项目请求模板状态，不发起网络请求。",
+          "command": "tergo-api-report",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 0
+        },
+        {
+          "id": "list",
+          "name": "发现 API 请求",
+          "description": "列出项目中的 .http、.rest、OpenAPI 和 Swagger 文件。",
+          "command": "tergo-api-list",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 0
+        },
+        {
+          "id": "inspect",
+          "name": "检查 API 地址",
+          "description": "执行安全的 HTTP 检查，显示状态、响应头、耗时和最终地址。",
+          "command": "tergo-api-inspect {{arg:url}}",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 1
+        },
+        {
+          "id": "run",
+          "name": "运行 API 请求模板",
+          "description": "执行请求文件中的 GET、HEAD 或 OPTIONS 请求，跳过敏感认证头。",
+          "command": "tergo-api-run {{arg:request}}",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 1
+        },
+        {
+          "id": "json",
+          "name": "提取 JSON 响应",
+          "description": "请求 HTTP/HTTPS 地址并用 jq 提取 JSON 字段。",
+          "command": "tergo-api-json {{arg:url}} {{arg:filter|.}}",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 2
+        }
+      ],
+      "releaseNotes": "首个公开版本。",
+      "readme": "# API 调试工作台\n\n`api-workbench` 复用项目中已有的 HTTP 请求模板和 OpenAPI 文件，提供安全的 API 探测、请求发现和 JSON 提取。\n\n## 命令\n\n| 命令 | 作用 | 风险 |\n| --- | --- | --- |\n| `tergo-api-report` | 查看 curl、jq 和请求文件状态 | 低 |\n| `tergo-api-list` | 发现 `.http`、`.rest`、OpenAPI 和 Swagger 文件 | 低 |\n| `tergo-api-inspect <url>` | 检查状态、响应头、耗时和最终地址 | 低 |\n| `tergo-api-run <request>` | 执行模板中的 GET、HEAD 或 OPTIONS 请求 | 低 |\n| `tergo-api-json <url> [filter]` | 用 jq 提取 JSON 响应字段 | 低 |\n\n请求模板的第一行使用 `GET https://example.test/health` 格式。后续普通请求头可以被转发；Authorization、Cookie 和其他敏感认证头会被跳过，避免出现在 curl 进程参数和输出中。第一版拒绝 POST、PUT、PATCH、DELETE，不执行请求体。\n\n插件只使用项目内的请求文件，URL 必须是 HTTP/HTTPS，禁止把用户名或密码放入 URL。`curl` 是硬依赖，`jq` 是 JSON 提取命令的可选依赖。插件不会安装工具、保存凭据或修改项目文件。\n",
+      "updatedAt": "2026-10-28T10:06:21Z",
+      "healthcheck": {
+        "command": "curl",
+        "args": [
+          "--version"
+        ],
+        "timeoutSeconds": 3
+      }
+    },
+    {
+      "id": "ci-workflow",
+      "name": "CI 运行工作台",
+      "description": "查看 GitHub Actions 或 GitLab CI 运行、失败摘要和构建产物。",
+      "version": "0.1.0",
+      "author": "Tergo Contributors",
+      "category": "release",
+      "license": "MIT",
+      "channel": "stable",
+      "verified": true,
+      "packageUrl": "https://wfu-work.github.io/tergo-plugins/packages/ci-workflow-0.1.0.tergo-plugin",
+      "packageSize": 4911,
+      "sha256": "e3cf53d52bba95a6a619737569cb1b11c553eb9b009cefc8f2932a13838fa716",
+      "source": "official",
+      "shells": [
+        "zsh",
+        "bash"
+      ],
+      "capabilities": [
+        "ci",
+        "github",
+        "gitlab",
+        "logs",
+        "artifacts"
+      ],
+      "requiredCommands": [],
+      "platforms": [
+        "darwin",
+        "linux"
+      ],
+      "minTergoVersion": "0.2.0",
+      "permissions": [
+        "network",
+        "process",
+        "filesystem"
+      ],
+      "surfaces": [
+        "command"
+      ],
+      "commands": [
+        {
+          "id": "report",
+          "name": "查看 CI 工具",
+          "description": "检查 gh、glab 和当前仓库信息，不访问远程 API。",
+          "command": "tergo-ci-report",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 0
+        },
+        {
+          "id": "status",
+          "name": "查看 CI 状态",
+          "description": "查看当前仓库最近的 CI 运行和失败摘要。",
+          "command": "tergo-ci-status",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 0
+        },
+        {
+          "id": "runs",
+          "name": "查看 CI 运行",
+          "description": "列出最近的 GitHub Actions 或 GitLab CI 运行。",
+          "command": "tergo-ci-runs {{arg:count|10}}",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 1
+        },
+        {
+          "id": "log",
+          "name": "查看失败日志",
+          "description": "查看指定 CI 运行的失败步骤日志。",
+          "command": "tergo-ci-log {{arg:run}}",
+          "mode": "execute",
+          "risk": "medium",
+          "argumentCount": 1
+        },
+        {
+          "id": "artifacts",
+          "name": "查看构建产物",
+          "description": "列出指定 CI 运行产生的构建产物或流水线摘要。",
+          "command": "tergo-ci-artifacts {{arg:run}}",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 1
+        },
+        {
+          "id": "rerun",
+          "name": "重跑失败任务",
+          "description": "重新执行指定 CI 运行中失败的任务，需要确认并使用现有 CLI 登录状态。",
+          "command": "tergo-ci-rerun {{arg:run}}",
+          "mode": "execute",
+          "risk": "high",
+          "argumentCount": 1
+        }
+      ],
+      "releaseNotes": "首个公开版本。",
+      "readme": "# CI 运行工作台\n\n`ci-workflow` 为当前 Git 仓库提供 GitHub Actions 或 GitLab CI 的运行摘要、失败日志和构建产物查看。它复用 `gh` 或 `glab` 的登录状态，不保存 Token。\n\n## 命令\n\n| 命令 | 作用 | 风险 |\n| --- | --- | --- |\n| `tergo-ci-report` | 查看 CI CLI 和仓库状态，不访问远程 API | 低 |\n| `tergo-ci-status` | 查看最近 CI 运行 | 低 |\n| `tergo-ci-runs [count]` | 列出最近运行 | 低 |\n| `tergo-ci-log <run>` | 查看失败步骤日志 | 中 |\n| `tergo-ci-artifacts <run>` | 列出构建产物或流水线摘要 | 低 |\n| `tergo-ci-rerun <run>` | 重跑失败任务 | 高 |\n\n插件优先使用 `gh`，没有 `gh` 时回退到 `glab`。读取命令不会修改仓库；重跑命令由 Tergo 的高风险确认流程保护。插件不会读取、保存或打印 Token，也不会自动下载构建产物。\n",
+      "updatedAt": "2026-10-28T10:06:21Z"
+    },
     {
       "id": "database-workbench",
       "name": "数据库工作台",
@@ -13,8 +211,8 @@
       "channel": "stable",
       "verified": true,
       "packageUrl": "https://wfu-work.github.io/tergo-plugins/packages/database-workbench-0.1.0.tergo-plugin",
-      "packageSize": 9491,
-      "sha256": "a7a009e60d0ba22bea2dd03eb3052b8463f6300dd175401d9c4245903f3025e3",
+      "packageSize": 9499,
+      "sha256": "e48475206718ec48772923df84eb0664f5058855ffca8a80f09c9fb89809a46b",
       "source": "official",
       "shells": [
         "zsh",
@@ -110,7 +308,7 @@
       ],
       "releaseNotes": "首个公开版本。",
       "readme": "# 数据库工作台\n\n`database-workbench` 把常见数据库客户端接入 Tergo 命令面板，复用用户已经配置好的环境，不在参数或输出中要求密码。\n\n支持 PostgreSQL (`psql`)、MySQL (`mysql`)、SQLite (`sqlite3`) 和 Redis (`redis-cli`)。客户端都是可选依赖；缺少客户端时，命令会给出安装提示，不会影响终端启动。\n\n## 配置来源\n\n- PostgreSQL：`DATABASE_URL`、`PGHOST`、`PGPORT`、`PGUSER`、`PGDATABASE`、`PGSERVICE`、`~/.pg_service.conf` 和客户端默认配置；\n- MySQL：`MYSQL_HOST`、`MYSQL_TCP_PORT`、`MYSQL_USER`、`MYSQL_DATABASE`、`~/.my.cnf` 和客户端默认配置；\n- SQLite：`TERGO_DB_SQLITE`、`SQLITE_DATABASE` 或 `DATABASE_FILE`；\n- Redis：`REDIS_URL`、`REDIS_HOST`、`REDIS_PORT` 和 `REDISCLI_AUTH`。\n\n`tergo-db-config` 只报告哪些来源已设置，不显示值。密码、连接串和 Token 不应作为命令面板参数传入。\n\n## 命令\n\n| 命令 | 作用 | 风险 |\n| --- | --- | --- |\n| `tergo-db-report` | 查看客户端安装状态 | 低 |\n| `tergo-db-config` | 查看脱敏后的配置来源 | 低 |\n| `tergo-db-test <backend>` | 执行 `SELECT 1` 或 `PING` | 低 |\n| `tergo-db-tables <backend>` | 查看表或 Redis 部分键名 | 低 |\n| `tergo-db-query <backend> <query>` | 执行受限只读查询 | 低 |\n| `tergo-db-explain <backend> <query>` | 预览查询计划 | 低 |\n| `tergo-db-export <backend> <query>` | 导出只读结果到 0600 临时文件 | 中 |\n\n`backend` 可以是 `auto`、`postgres`、`mysql`、`sqlite` 或 `redis`。`auto` 只会根据显式环境配置选择数据库，不会在没有目标配置时擅自连接本机服务。\n\nSQL 查询拒绝多语句和常见写操作关键字，只允许 `SELECT`、`WITH`、`SHOW` 或 `DESCRIBE` 开头；Redis 只允许读取类命令。数据库客户端仍然按用户现有权限运行，插件不提供 Shell 沙箱。\n",
-      "updatedAt": "2026-10-28T07:18:25Z"
+      "updatedAt": "2026-10-28T10:06:21Z"
     },
     {
       "id": "developer-toolbox",
@@ -123,8 +321,8 @@
       "channel": "stable",
       "verified": true,
       "packageUrl": "https://wfu-work.github.io/tergo-plugins/packages/developer-toolbox-0.1.0.tergo-plugin",
-      "packageSize": 4857,
-      "sha256": "e340483fbd6503bc30a5443a522ca9f7c018afcefe73b55ae6bba0d78d81df8c",
+      "packageSize": 4866,
+      "sha256": "9d79a7d4b453295d1bb01de930a86e168734ac88c00d07c63555a77a5b727010",
       "source": "official",
       "shells": [
         "zsh",
@@ -216,7 +414,115 @@
       ],
       "releaseNotes": "首个公开版本。",
       "readme": "# 开发者工具箱\n\n`developer-toolbox` 为 Tergo 提供项目搜索、文件查找、文件预览、模糊选择、Git 差异阅读和目录体积分析。\n\n插件优先使用 `rg`、`fd`、`fzf`、`bat` 和 `delta`。这些工具都是可选依赖：缺少时会回退到系统自带的 `grep`、`find`、`sed` 和 Git 输出，不会阻止终端启动。\n\n## 命令\n\n| 命令 | 作用 |\n| --- | --- |\n| `tergo-search` | 在项目根目录搜索文本 |\n| `tergo-files` | 按文件名查找文件 |\n| `tergo-preview` | 预览文件前 240 行 |\n| `tergo-fuzzy-file` | 使用 fzf 选择文件 |\n| `tergo-diff-view` | 阅读当前 Git 差异 |\n| `tergo-size-report` | 查看一级目录体积 |\n| `tergo-tool-report` | 查看可选工具安装状态 |\n\n插件只读取项目文件，不修改工作区。\n",
-      "updatedAt": "2026-10-28T07:18:25Z"
+      "updatedAt": "2026-10-28T10:06:21Z"
+    },
+    {
+      "id": "flutter-workflow",
+      "name": "Flutter 工作流",
+      "description": "检查 Flutter 环境、分析项目、运行测试并预览构建目标。",
+      "version": "0.1.0",
+      "author": "Tergo Contributors",
+      "category": "productivity",
+      "license": "MIT",
+      "channel": "stable",
+      "verified": true,
+      "packageUrl": "https://wfu-work.github.io/tergo-plugins/packages/flutter-workflow-0.1.0.tergo-plugin",
+      "packageSize": 4568,
+      "sha256": "ee4640531f2e80dcce1f200b254a507c14e293558c9fc2facebef5f03f60c83b",
+      "source": "official",
+      "shells": [
+        "zsh",
+        "bash"
+      ],
+      "capabilities": [
+        "flutter",
+        "dart",
+        "mobile",
+        "testing",
+        "diagnostics"
+      ],
+      "requiredCommands": [],
+      "platforms": [
+        "darwin",
+        "linux"
+      ],
+      "minTergoVersion": "0.2.0",
+      "permissions": [
+        "filesystem",
+        "process",
+        "network"
+      ],
+      "surfaces": [
+        "command"
+      ],
+      "commands": [
+        {
+          "id": "report",
+          "name": "查看 Flutter 工具",
+          "description": "查看 Flutter、Dart 和当前项目状态，不修改项目。",
+          "command": "tergo-flutter-report",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 0
+        },
+        {
+          "id": "doctor",
+          "name": "检查 Flutter 环境",
+          "description": "运行 flutter doctor，汇总 SDK、设备和平台工具状态。",
+          "command": "tergo-flutter-doctor",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 0
+        },
+        {
+          "id": "devices",
+          "name": "查看 Flutter 设备",
+          "description": "列出当前可用的模拟器、真机和桌面设备。",
+          "command": "tergo-flutter-devices",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 0
+        },
+        {
+          "id": "analyze",
+          "name": "分析 Flutter 项目",
+          "description": "运行 flutter analyze 检查当前项目代码。",
+          "command": "tergo-flutter-analyze",
+          "mode": "execute",
+          "risk": "medium",
+          "argumentCount": 0
+        },
+        {
+          "id": "test",
+          "name": "运行 Flutter 测试",
+          "description": "运行当前项目的 Flutter 测试并返回失败摘要。",
+          "command": "tergo-flutter-test",
+          "mode": "execute",
+          "risk": "medium",
+          "argumentCount": 0
+        },
+        {
+          "id": "pub-outdated",
+          "name": "检查 Flutter 依赖",
+          "description": "检查 pub 依赖更新，不自动修改 pubspec 或 lock 文件。",
+          "command": "tergo-flutter-pub-outdated",
+          "mode": "execute",
+          "risk": "medium",
+          "argumentCount": 0
+        },
+        {
+          "id": "build-preview",
+          "name": "预览 Flutter 构建",
+          "description": "展示指定平台的构建命令，不执行构建或发布。",
+          "command": "tergo-flutter-build-preview {{arg:target|ios}}",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 1
+        }
+      ],
+      "releaseNotes": "首个公开版本。",
+      "readme": "# Flutter 工作流\n\n`flutter-workflow` 面向 Flutter 项目提供环境检查、设备查看、代码分析、测试、依赖检查和构建预览。它不会安装 Flutter、修改用户 Shell 配置或执行发布操作。\n\n## 命令\n\n| 命令 | 作用 | 风险 |\n| --- | --- | --- |\n| `tergo-flutter-report` | 查看 Flutter、Dart 和项目状态 | 低 |\n| `tergo-flutter-doctor` | 检查 Flutter 环境 | 低 |\n| `tergo-flutter-devices` | 查看可用设备 | 低 |\n| `tergo-flutter-analyze` | 运行静态分析 | 中 |\n| `tergo-flutter-test` | 运行项目测试 | 中 |\n| `tergo-flutter-pub-outdated` | 检查依赖更新 | 中 |\n| `tergo-flutter-build-preview <target>` | 预览构建命令，不执行构建 | 低 |\n\nFlutter SDK 是按需检查的可选依赖。缺少 SDK 时插件仍然可以加载，命令会给出安装提示；依赖检查命令可能访问 pub.dev，但不会自动修改依赖文件。\n",
+      "updatedAt": "2026-10-28T10:06:21Z"
     },
     {
       "id": "release-workflow",
@@ -229,8 +535,8 @@
       "channel": "stable",
       "verified": true,
       "packageUrl": "https://wfu-work.github.io/tergo-plugins/packages/release-workflow-0.1.0.tergo-plugin",
-      "packageSize": 7001,
-      "sha256": "139362a22ffb27b92d1b61377891bd359dcbcd4c97a8c85d28cc2901a2562c5c",
+      "packageSize": 7007,
+      "sha256": "1eef6598c83190fe00929e84dc5f1dbd23fbd8c328bf83490c098d285195d9f9",
       "source": "official",
       "shells": [
         "zsh",
@@ -315,7 +621,7 @@
       ],
       "releaseNotes": "首个公开版本。",
       "readme": "# 发布工作流\n\n`release-workflow` 将常见的提交检查、变更摘要、版本检查和发布预览接入 Tergo。所有写操作都经过 Tergo 风险确认；插件只创建本地 Git tag，不会自动推送。\n\n## 命令\n\n| 命令 | 作用 | 风险 |\n| --- | --- | --- |\n| `tergo-release-status` | 查看分支、工作区、上游和最近标签 | 低 |\n| `tergo-release-commit-check` | 校验最近提交格式 | 低 |\n| `tergo-release-changelog` | 生成 Markdown 变更摘要 | 低 |\n| `tergo-release-version-check` | 检查项目版本字段 | 低 |\n| `tergo-release-preview` | 预览发布标签操作 | 中 |\n| `tergo-release-tag` | 创建本地 annotated tag | 高 |\n\n提交格式检查支持 `feat`、`fix`、`docs`、`style`、`refactor`、`perf`、`test`、`build`、`ci`、`chore` 和 `revert`。发布标签要求使用 SemVer，例如 `1.2.3` 或 `v1.2.3`，并且工作区必须干净。\n",
-      "updatedAt": "2026-10-28T07:18:25Z",
+      "updatedAt": "2026-10-28T10:06:21Z",
       "healthcheck": {
         "command": "git",
         "args": [
@@ -335,8 +641,8 @@
       "channel": "stable",
       "verified": true,
       "packageUrl": "https://wfu-work.github.io/tergo-plugins/packages/security-scanner-0.1.0.tergo-plugin",
-      "packageSize": 5080,
-      "sha256": "40e193bc02e9c3e9240437ea66f0e62b612e2c81d45cbc2b30e45723f447cdbc",
+      "packageSize": 5084,
+      "sha256": "5afeedb75fa25ed5d08d78ea87f64af11b92f675cd92c3d4ec5fc207a5a2ece4",
       "source": "official",
       "shells": [
         "zsh",
@@ -413,7 +719,7 @@
       ],
       "releaseNotes": "首个公开版本。",
       "readme": "# 项目安全扫描\n\n`security-scanner` 把常见的提交前安全检查接入 Tergo 命令面板。扫描器没有安装时，插件仍然可以加载，并会在调用命令时给出安装提示。\n\n## 命令\n\n| 命令 | 作用 | 依赖 |\n| --- | --- | --- |\n| `tergo-secret-scan` | 扫描疑似密钥，结果脱敏 | `gitleaks` |\n| `tergo-dependency-scan` | 扫描依赖漏洞 | `osv-scanner` |\n| `tergo-code-scan` | 执行 Semgrep 规则扫描 | `semgrep` |\n| `tergo-security-report` | 输出扫描范围和工具版本 | `git` |\n| `tergo-security-baseline` | 预览临时脱敏基线报告 | `gitleaks` |\n\n扫描结果不会上传到 Tergo。Semgrep 使用 `auto` 规则时可能根据自身配置下载规则，网络权限因此在清单中显式声明。插件不会读取或打印环境变量，也不会自动修改 `.gitignore`、配置文件或源码。\n",
-      "updatedAt": "2026-10-28T07:18:25Z",
+      "updatedAt": "2026-10-28T10:06:21Z",
       "healthcheck": {
         "command": "git",
         "args": [

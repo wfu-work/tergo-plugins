@@ -1,0 +1,80 @@
+{
+  "manifestVersion": 1,
+  "id": "ci-workflow",
+  "name": "CI 运行工作台",
+  "version": "0.1.0",
+  "description": "查看 GitHub Actions 或 GitLab CI 运行、失败摘要和构建产物。",
+  "category": "release",
+  "shells": ["zsh", "bash"],
+  "entry": {
+    "zsh": "init.zsh",
+    "bash": "init.bash"
+  },
+  "capabilities": ["ci", "github", "gitlab", "logs", "artifacts"],
+  "platforms": ["darwin", "linux"],
+  "minTergoVersion": "0.2.0",
+  "permissions": ["network", "process", "filesystem"],
+  "surfaces": ["command"],
+  "commands": [
+    {
+      "id": "report",
+      "name": "查看 CI 工具",
+      "description": "检查 gh、glab 和当前仓库信息，不访问远程 API。",
+      "command": "tergo-ci-report",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "status",
+      "name": "查看 CI 状态",
+      "description": "查看当前仓库最近的 CI 运行和失败摘要。",
+      "command": "tergo-ci-status",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "runs",
+      "name": "查看 CI 运行",
+      "description": "列出最近的 GitHub Actions 或 GitLab CI 运行。",
+      "command": "tergo-ci-runs {{arg:count|10}}",
+      "mode": "execute",
+      "risk": "low",
+      "arguments": [
+        {"name": "count", "label": "运行数量", "default": "10"}
+      ]
+    },
+    {
+      "id": "log",
+      "name": "查看失败日志",
+      "description": "查看指定 CI 运行的失败步骤日志。",
+      "command": "tergo-ci-log {{arg:run}}",
+      "mode": "execute",
+      "risk": "medium",
+      "arguments": [
+        {"name": "run", "label": "运行编号", "required": true}
+      ]
+    },
+    {
+      "id": "artifacts",
+      "name": "查看构建产物",
+      "description": "列出指定 CI 运行产生的构建产物或流水线摘要。",
+      "command": "tergo-ci-artifacts {{arg:run}}",
+      "mode": "execute",
+      "risk": "low",
+      "arguments": [
+        {"name": "run", "label": "运行编号", "required": true}
+      ]
+    },
+    {
+      "id": "rerun",
+      "name": "重跑失败任务",
+      "description": "重新执行指定 CI 运行中失败的任务，需要确认并使用现有 CLI 登录状态。",
+      "command": "tergo-ci-rerun {{arg:run}}",
+      "mode": "execute",
+      "risk": "high",
+      "arguments": [
+        {"name": "run", "label": "运行编号", "required": true}
+      ]
+    }
+  ]
+}
