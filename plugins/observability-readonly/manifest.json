@@ -1,0 +1,88 @@
+{
+  "manifestVersion": 1,
+  "id": "observability-readonly",
+  "name": "可观测性只读工作台",
+  "version": "0.1.0",
+  "description": "只读查看 Sentry 项目状态、未解决错误、Release 和事件统计。",
+  "category": "platform",
+  "shells": ["zsh", "bash"],
+  "entry": {
+    "zsh": "init.zsh",
+    "bash": "init.bash"
+  },
+  "capabilities": ["observability", "sentry", "errors", "releases", "metrics"],
+  "optionalCommands": ["curl", "jq", "sentry-cli"],
+  "configSources": ["SENTRY_URL", "SENTRY_ORG", "SENTRY_PROJECT", "SENTRY_AUTH_TOKEN", "SENTRY_ACCESS_TOKEN"],
+  "redaction": {
+    "mode": "omit-values",
+    "fields": ["sentry-tokens", "stack-traces", "event-payloads", "user-identifiers"]
+  },
+  "platforms": ["darwin", "linux"],
+  "minTergoVersion": "0.2.0",
+  "permissions": ["network", "filesystem", "process"],
+  "surfaces": ["command"],
+  "commands": [
+    {
+      "id": "report",
+      "name": "查看可观测性工具",
+      "description": "查看 Sentry 地址、配置来源和 curl、jq、sentry-cli 状态，不访问远程 API。",
+      "command": "tergo-observability-report",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "config",
+      "name": "检查 Sentry 配置",
+      "description": "只显示 Sentry 配置是否存在，不显示 Token 值。",
+      "command": "tergo-observability-config",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "status",
+      "name": "查看 Sentry 项目",
+      "description": "查看项目名称、平台和状态。",
+      "command": "tergo-sentry-status",
+      "mode": "execute",
+      "risk": "medium"
+    },
+    {
+      "id": "issues",
+      "name": "查看未解决错误",
+      "description": "读取未解决 Issue 的编号、级别、标题、次数和最近时间，只输出摘要。",
+      "command": "tergo-sentry-issues {{arg:limit|10}}",
+      "mode": "execute",
+      "risk": "medium",
+      "arguments": [
+        {"name": "limit", "label": "错误数量", "default": "10"}
+      ]
+    },
+    {
+      "id": "releases",
+      "name": "查看 Sentry Release",
+      "description": "查看最近 Release、关联项目和事件时间。",
+      "command": "tergo-sentry-releases {{arg:limit|10}}",
+      "mode": "execute",
+      "risk": "medium",
+      "arguments": [
+        {"name": "limit", "label": "Release 数量", "default": "10"}
+      ]
+    },
+    {
+      "id": "stats",
+      "name": "查看事件统计",
+      "description": "查看项目按小时聚合的事件数量，不读取事件详情。",
+      "command": "tergo-sentry-stats",
+      "mode": "execute",
+      "risk": "medium"
+    },
+    {
+      "id": "links",
+      "name": "生成 Sentry 链接",
+      "description": "生成项目 Issue 和 Release 页面链接，不访问网络。",
+      "command": "tergo-observability-links",
+      "mode": "execute",
+      "risk": "low"
+    }
+  ]
+}

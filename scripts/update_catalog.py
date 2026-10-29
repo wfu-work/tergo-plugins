@@ -23,6 +23,7 @@ CATEGORIES = {
     "terraform-workflow": "platform",
     "k8s-helm-release": "platform",
     "container-registry": "platform",
+    "observability-readonly": "platform",
 }
 
 

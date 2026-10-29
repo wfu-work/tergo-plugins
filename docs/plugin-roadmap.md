@@ -135,6 +135,10 @@ Tergo 已有 Pod、日志和资源删除基础能力，在线插件只补 Helm r
 
 已交付 `container-registry`。插件支持 Docker 本地镜像、crane 远程 digest/标签查询、Trivy 扫描预览和按完整 digest 的清理预览；不执行 login、push、delete，不读取或打印 Docker、Registry 和 GH_TOKEN 凭据。下一步优先补一个具体云厂商的只读上下文或单一可观测性后端。
 
+### 阶段 5：可观测性（已完成第一版）
+
+已交付 `observability-readonly`，第一版先支持 Sentry。插件提供项目状态、未解决错误、Release、按小时事件统计和链接生成；Token 只从环境变量读取，响应只输出经过 jq 提取的摘要，不上传事件、不修改 Issue 或 Release。Grafana/Loki、云日志和告警写操作留到后续独立插件。
+
 ## 每个插件的发布门槛
 
 进入 `stable` 前必须满足：
@@ -150,4 +154,4 @@ Tergo 已有 Pod、日志和资源删除基础能力，在线插件只补 Helm r
 
 ## 最终建议
 
-P0 已覆盖 API 调试、CI 运行和 Flutter 生态，阶段 2 已补足环境可复现性和 Python 生态，阶段 3 已补充 Terraform 与 Helm，阶段 4 已补充镜像仓库工作流。下一步应在 `observability-readonly` 与具体云厂商的 `cloud-context` 中选择一个，继续保持只读和变更预览边界。
+P0 已覆盖 API 调试、CI 运行和 Flutter 生态，阶段 2 已补足环境可复现性和 Python 生态，阶段 3 已补充 Terraform 与 Helm，阶段 4 已补充镜像仓库，阶段 5 已补充 Sentry 只读观测。下一步应选择具体云厂商的 `cloud-context` 或 Grafana/Loki 只读适配器，继续保持只读和变更预览边界。

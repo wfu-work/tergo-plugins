@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-29T00:06:30Z",
+  "updatedAt": "2026-10-29T00:23:35Z",
   "plugins": [
     {
       "id": "api-workbench",
@@ -98,7 +98,7 @@
       ],
       "releaseNotes": "首个公开版本。",
       "readme": "# API 调试工作台\n\n`api-workbench` 复用项目中已有的 HTTP 请求模板和 OpenAPI 文件，提供安全的 API 探测、请求发现和 JSON 提取。\n\n## 命令\n\n| 命令 | 作用 | 风险 |\n| --- | --- | --- |\n| `tergo-api-report` | 查看 curl、jq 和请求文件状态 | 低 |\n| `tergo-api-list` | 发现 `.http`、`.rest`、OpenAPI 和 Swagger 文件 | 低 |\n| `tergo-api-inspect <url>` | 检查状态、响应头、耗时和最终地址 | 低 |\n| `tergo-api-run <request>` | 执行模板中的 GET、HEAD 或 OPTIONS 请求 | 低 |\n| `tergo-api-json <url> [filter]` | 用 jq 提取 JSON 响应字段 | 低 |\n\n请求模板的第一行使用 `GET https://example.test/health` 格式。后续普通请求头可以被转发；Authorization、Cookie 和其他敏感认证头会被跳过，避免出现在 curl 进程参数和输出中。第一版拒绝 POST、PUT、PATCH、DELETE，不执行请求体。\n\n插件只使用项目内的请求文件，URL 必须是 HTTP/HTTPS，禁止把用户名或密码放入 URL。`curl` 是硬依赖，`jq` 是 JSON 提取命令的可选依赖。插件不会安装工具、保存凭据或修改项目文件。\n",
-      "updatedAt": "2026-10-29T00:06:30Z",
+      "updatedAt": "2026-10-29T00:23:35Z",
       "healthcheck": {
         "command": "curl",
         "args": [
@@ -210,7 +210,7 @@
       ],
       "releaseNotes": "首个公开版本。",
       "readme": "# CI 运行工作台\n\n`ci-workflow` 为当前 Git 仓库提供 GitHub Actions 或 GitLab CI 的运行摘要、失败日志和构建产物查看。它复用 `gh` 或 `glab` 的登录状态，不保存 Token。\n\n## 命令\n\n| 命令 | 作用 | 风险 |\n| --- | --- | --- |\n| `tergo-ci-report` | 查看 CI CLI 和仓库状态，不访问远程 API | 低 |\n| `tergo-ci-status` | 查看最近 CI 运行 | 低 |\n| `tergo-ci-runs [count]` | 列出最近运行 | 低 |\n| `tergo-ci-log <run>` | 查看失败步骤日志 | 中 |\n| `tergo-ci-artifacts <run>` | 列出构建产物或流水线摘要 | 低 |\n| `tergo-ci-rerun <run>` | 重跑失败任务 | 高 |\n\n插件优先使用 `gh`，没有 `gh` 时回退到 `glab`。读取命令不会修改仓库；重跑命令由 Tergo 的高风险确认流程保护。插件不会读取、保存或打印 Token，也不会自动下载构建产物。\n",
-      "updatedAt": "2026-10-29T00:06:30Z"
+      "updatedAt": "2026-10-29T00:23:35Z"
     },
     {
       "id": "container-registry",
@@ -331,7 +331,7 @@
       ],
       "releaseNotes": "首个公开版本。",
       "readme": "# 镜像仓库工作流\n\n`container-registry` 补充 Tergo 已有的 Docker 能力，聚焦镜像仓库的摘要、标签、体积和安全预览。第一版支持 Docker 本地镜像和 `crane` 远程仓库查询，并提供 Trivy 扫描、清理预览；不会执行 login、push、delete 或清理远程标签。\n\n## 命令\n\n| 命令 | 作用 | 风险 |\n| --- | --- | --- |\n| `tergo-registry-report` | 查看 Docker、crane、Trivy 和 gh 状态 | 低 |\n| `tergo-registry-local-images` | 查看本地镜像、ID 和体积 | 低 |\n| `tergo-registry-digest <image>` | 查看远程镜像 digest 或 manifest | 中 |\n| `tergo-registry-tags <repository>` | 使用 crane 查看远程标签 | 中 |\n| `tergo-registry-scan-preview <image>` | 预览 Trivy 扫描命令 | 低 |\n| `tergo-registry-cleanup-preview <image@digest>` | 预览按 digest 清理命令 | 低 |\n\n`crane` 是远程摘要和标签查询的推荐依赖，缺少时摘要命令回退到 `docker manifest inspect`；`docker`、`crane`、`trivy` 和 `gh` 都是可选依赖，缺少时插件仍能加载并给出安装提示。插件不会读取或输出 Docker 配置、Registry Token、GH_TOKEN 或镜像配置中的 Secret。\n",
-      "updatedAt": "2026-10-29T00:06:30Z"
+      "updatedAt": "2026-10-29T00:23:35Z"
     },
     {
       "id": "database-workbench",
@@ -447,7 +447,7 @@
       ],
       "releaseNotes": "首个公开版本。",
       "readme": "# 数据库工作台\n\n`database-workbench` 把常见数据库客户端接入 Tergo 命令面板，复用用户已经配置好的环境，不在参数或输出中要求密码。\n\n支持 PostgreSQL (`psql`)、MySQL (`mysql`)、SQLite (`sqlite3`) 和 Redis (`redis-cli`)。客户端都是可选依赖；缺少客户端时，命令会给出安装提示，不会影响终端启动。\n\n## 配置来源\n\n- PostgreSQL：`DATABASE_URL`、`PGHOST`、`PGPORT`、`PGUSER`、`PGDATABASE`、`PGSERVICE`、`~/.pg_service.conf` 和客户端默认配置；\n- MySQL：`MYSQL_HOST`、`MYSQL_TCP_PORT`、`MYSQL_USER`、`MYSQL_DATABASE`、`~/.my.cnf` 和客户端默认配置；\n- SQLite：`TERGO_DB_SQLITE`、`SQLITE_DATABASE` 或 `DATABASE_FILE`；\n- Redis：`REDIS_URL`、`REDIS_HOST`、`REDIS_PORT` 和 `REDISCLI_AUTH`。\n\n`tergo-db-config` 只报告哪些来源已设置，不显示值。密码、连接串和 Token 不应作为命令面板参数传入。\n\n## 命令\n\n| 命令 | 作用 | 风险 |\n| --- | --- | --- |\n| `tergo-db-report` | 查看客户端安装状态 | 低 |\n| `tergo-db-config` | 查看脱敏后的配置来源 | 低 |\n| `tergo-db-test <backend>` | 执行 `SELECT 1` 或 `PING` | 低 |\n| `tergo-db-tables <backend>` | 查看表或 Redis 部分键名 | 低 |\n| `tergo-db-query <backend> <query>` | 执行受限只读查询 | 低 |\n| `tergo-db-explain <backend> <query>` | 预览查询计划 | 低 |\n| `tergo-db-export <backend> <query>` | 导出只读结果到 0600 临时文件 | 中 |\n\n`backend` 可以是 `auto`、`postgres`、`mysql`、`sqlite` 或 `redis`。`auto` 只会根据显式环境配置选择数据库，不会在没有目标配置时擅自连接本机服务。\n\nSQL 查询拒绝多语句和常见写操作关键字，只允许 `SELECT`、`WITH`、`SHOW` 或 `DESCRIBE` 开头；Redis 只允许读取类命令。数据库客户端仍然按用户现有权限运行，插件不提供 Shell 沙箱。\n",
-      "updatedAt": "2026-10-29T00:06:30Z"
+      "updatedAt": "2026-10-29T00:23:35Z"
     },
     {
       "id": "developer-toolbox",
@@ -559,7 +559,7 @@
       ],
       "releaseNotes": "首个公开版本。",
       "readme": "# 开发者工具箱\n\n`developer-toolbox` 为 Tergo 提供项目搜索、文件查找、文件预览、模糊选择、Git 差异阅读和目录体积分析。\n\n插件优先使用 `rg`、`fd`、`fzf`、`bat` 和 `delta`。这些工具都是可选依赖：缺少时会回退到系统自带的 `grep`、`find`、`sed` 和 Git 输出，不会阻止终端启动。\n\n## 命令\n\n| 命令 | 作用 |\n| --- | --- |\n| `tergo-search` | 在项目根目录搜索文本 |\n| `tergo-files` | 按文件名查找文件 |\n| `tergo-preview` | 预览文件前 240 行 |\n| `tergo-fuzzy-file` | 使用 fzf 选择文件 |\n| `tergo-diff-view` | 阅读当前 Git 差异 |\n| `tergo-size-report` | 查看一级目录体积 |\n| `tergo-tool-report` | 查看可选工具安装状态 |\n\n插件只读取项目文件，不修改工作区。\n",
-      "updatedAt": "2026-10-29T00:06:30Z"
+      "updatedAt": "2026-10-29T00:23:35Z"
     },
     {
       "id": "env-doctor",
@@ -678,7 +678,7 @@
       ],
       "releaseNotes": "首个公开版本。",
       "readme": "# 环境诊断\n\n`env-doctor` 用来回答“当前项目使用了哪些工具和配置来源、缺少哪些环境变量”这类问题。它只读取文件存在性、工具版本和变量名称，永远不输出 `.env`、Shell 环境或配置文件中的变量值。\n\n## 命令\n\n| 命令 | 作用 | 风险 |\n| --- | --- | --- |\n| `tergo-env-report` | 查看工具版本和虚拟环境状态 | 低 |\n| `tergo-env-tools` | 查看 mise、direnv、Python 等工具状态 | 低 |\n| `tergo-env-sources` | 检查版本文件、dotenv 和项目配置来源 | 低 |\n| `tergo-env-vars` | 查看变量名称及 `.env.example` 设置状态 | 低 |\n| `tergo-env-check` | 检查 `.env.example` 中声明的变量是否已设置 | 低 |\n\n插件不会加载 `.envrc`，不会执行项目配置文件，不会安装工具，也不会修改工作区。`tergo-env-check` 找不到配置文件时返回成功并提示跳过；发现缺少变量时返回非零状态，方便在任务中使用。\n",
-      "updatedAt": "2026-10-29T00:06:30Z"
+      "updatedAt": "2026-10-29T00:23:35Z"
     },
     {
       "id": "flutter-workflow",
@@ -792,7 +792,7 @@
       ],
       "releaseNotes": "首个公开版本。",
       "readme": "# Flutter 工作流\n\n`flutter-workflow` 面向 Flutter 项目提供环境检查、设备查看、代码分析、测试、依赖检查和构建预览。它不会安装 Flutter、修改用户 Shell 配置或执行发布操作。\n\n## 命令\n\n| 命令 | 作用 | 风险 |\n| --- | --- | --- |\n| `tergo-flutter-report` | 查看 Flutter、Dart 和项目状态 | 低 |\n| `tergo-flutter-doctor` | 检查 Flutter 环境 | 低 |\n| `tergo-flutter-devices` | 查看可用设备 | 低 |\n| `tergo-flutter-analyze` | 运行静态分析 | 中 |\n| `tergo-flutter-test` | 运行项目测试 | 中 |\n| `tergo-flutter-pub-outdated` | 检查依赖更新 | 中 |\n| `tergo-flutter-build-preview <target>` | 预览构建命令，不执行构建 | 低 |\n\nFlutter SDK 是按需检查的可选依赖。缺少 SDK 时插件仍然可以加载，命令会给出安装提示；依赖检查命令可能访问 pub.dev，但不会自动修改依赖文件。\n",
-      "updatedAt": "2026-10-29T00:06:30Z"
+      "updatedAt": "2026-10-29T00:23:35Z"
     },
     {
       "id": "k8s-helm-release",
@@ -921,7 +921,136 @@
       ],
       "releaseNotes": "首个公开版本。",
       "readme": "# Helm 发布预览\n\n`k8s-helm-release` 补充 Tergo 已有 Kubernetes 基础能力，聚焦 Helm Chart 和 Release 的只读检查。第一版支持 Release 查询、Chart lint、模板渲染、默认 values、helm-diff 和升级预览，不执行 `helm upgrade`、`rollback`、删除或集群写入。\n\n## 命令\n\n| 命令 | 作用 | 风险 |\n| --- | --- | --- |\n| `tergo-helm-report` | 查看 Helm、kubectl、Chart 和上下文状态 | 低 |\n| `tergo-helm-releases [namespace]` | 查看 Release | 中 |\n| `tergo-helm-chart-lint [chart]` | 校验 Chart | 低 |\n| `tergo-helm-template [chart]` | 渲染模板 | 中 |\n| `tergo-helm-values [chart]` | 查看默认 values | 低 |\n| `tergo-helm-diff <release> [chart]` | 预览 Release 差异 | 中 |\n| `tergo-helm-upgrade-preview <release> [chart]` | 预览升级命令 | 低 |\n\nChart 路径必须位于当前项目内。Release 查询和 helm-diff 会访问当前 kubeconfig 指向的集群；插件不会读取或打印 kubeconfig 内容。模板和差异输出可能包含 Secret 或其他敏感值，请勿直接发布到公共日志。\n",
-      "updatedAt": "2026-10-29T00:06:30Z"
+      "updatedAt": "2026-10-29T00:23:35Z"
+    },
+    {
+      "id": "observability-readonly",
+      "name": "可观测性只读工作台",
+      "description": "只读查看 Sentry 项目状态、未解决错误、Release 和事件统计。",
+      "version": "0.1.0",
+      "author": "Tergo Contributors",
+      "category": "platform",
+      "license": "MIT",
+      "channel": "stable",
+      "verified": true,
+      "packageUrl": "https://wfu-work.github.io/tergo-plugins/packages/observability-readonly-0.1.0.tergo-plugin",
+      "packageSize": 7349,
+      "sha256": "1a8d0988eefaf18971b9b79ca8a9fd5c375a9dad18af3576539f30d47c46cf91",
+      "source": "official",
+      "shells": [
+        "zsh",
+        "bash"
+      ],
+      "capabilities": [
+        "observability",
+        "sentry",
+        "errors",
+        "releases",
+        "metrics"
+      ],
+      "requiredCommands": [],
+      "optionalCommands": [
+        "curl",
+        "jq",
+        "sentry-cli"
+      ],
+      "configSources": [
+        "SENTRY_URL",
+        "SENTRY_ORG",
+        "SENTRY_PROJECT",
+        "SENTRY_AUTH_TOKEN",
+        "SENTRY_ACCESS_TOKEN"
+      ],
+      "redaction": {
+        "mode": "omit-values",
+        "fields": [
+          "sentry-tokens",
+          "stack-traces",
+          "event-payloads",
+          "user-identifiers"
+        ]
+      },
+      "platforms": [
+        "darwin",
+        "linux"
+      ],
+      "minTergoVersion": "0.2.0",
+      "permissions": [
+        "network",
+        "filesystem",
+        "process"
+      ],
+      "surfaces": [
+        "command"
+      ],
+      "commands": [
+        {
+          "id": "report",
+          "name": "查看可观测性工具",
+          "description": "查看 Sentry 地址、配置来源和 curl、jq、sentry-cli 状态，不访问远程 API。",
+          "command": "tergo-observability-report",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 0
+        },
+        {
+          "id": "config",
+          "name": "检查 Sentry 配置",
+          "description": "只显示 Sentry 配置是否存在，不显示 Token 值。",
+          "command": "tergo-observability-config",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 0
+        },
+        {
+          "id": "status",
+          "name": "查看 Sentry 项目",
+          "description": "查看项目名称、平台和状态。",
+          "command": "tergo-sentry-status",
+          "mode": "execute",
+          "risk": "medium",
+          "argumentCount": 0
+        },
+        {
+          "id": "issues",
+          "name": "查看未解决错误",
+          "description": "读取未解决 Issue 的编号、级别、标题、次数和最近时间，只输出摘要。",
+          "command": "tergo-sentry-issues {{arg:limit|10}}",
+          "mode": "execute",
+          "risk": "medium",
+          "argumentCount": 1
+        },
+        {
+          "id": "releases",
+          "name": "查看 Sentry Release",
+          "description": "查看最近 Release、关联项目和事件时间。",
+          "command": "tergo-sentry-releases {{arg:limit|10}}",
+          "mode": "execute",
+          "risk": "medium",
+          "argumentCount": 1
+        },
+        {
+          "id": "stats",
+          "name": "查看事件统计",
+          "description": "查看项目按小时聚合的事件数量，不读取事件详情。",
+          "command": "tergo-sentry-stats",
+          "mode": "execute",
+          "risk": "medium",
+          "argumentCount": 0
+        },
+        {
+          "id": "links",
+          "name": "生成 Sentry 链接",
+          "description": "生成项目 Issue 和 Release 页面链接，不访问网络。",
+          "command": "tergo-observability-links",
+          "mode": "execute",
+          "risk": "low",
+          "argumentCount": 0
+        }
+      ],
+      "releaseNotes": "首个公开版本。",
+      "readme": "# 可观测性只读工作台\n\n`observability-readonly` 第一版支持 Sentry，只读取项目状态、未解决错误、Release 和事件统计。它不会发送事件、修改 Issue、创建 Release 或下载完整事件详情。\n\n## 命令\n\n| 命令 | 作用 | 风险 |\n| --- | --- | --- |\n| `tergo-observability-report` | 查看 Sentry 配置来源和工具状态 | 低 |\n| `tergo-observability-config` | 检查配置是否存在，不显示 Token | 低 |\n| `tergo-sentry-status` | 查看项目状态 | 中 |\n| `tergo-sentry-issues [limit]` | 查看未解决错误摘要 | 中 |\n| `tergo-sentry-releases [limit]` | 查看最近 Release | 中 |\n| `tergo-sentry-stats` | 查看按小时聚合的事件数量 | 中 |\n| `tergo-observability-links` | 生成 Sentry 项目链接 | 低 |\n\n需要设置 `SENTRY_ORG`、`SENTRY_PROJECT` 和 `SENTRY_AUTH_TOKEN`（或 `SENTRY_ACCESS_TOKEN`）。默认 API 地址为 `https://sentry.io`，可通过 `SENTRY_URL` 指向自建 Sentry。Token 只通过临时权限为 0600 的 curl 配置文件传递，不进入命令参数和输出；响应只经过 jq 提取摘要，避免打印完整事件 payload、用户信息和堆栈。\n",
+      "updatedAt": "2026-10-29T00:23:35Z"
     },
     {
       "id": "python-workflow",
@@ -1056,7 +1185,7 @@
       ],
       "releaseNotes": "首个公开版本。",
       "readme": "# Python 工作流\n\n`python-workflow` 复用当前项目的 Python 解释器和虚拟环境，提供环境报告、pytest、ruff、mypy 和依赖过期检查。命令不会自动创建虚拟环境、安装依赖或修改项目文件。\n\n## 命令\n\n| 命令 | 作用 | 风险 |\n| --- | --- | --- |\n| `tergo-python-report` | 查看 Python、pip、uv、poetry 和检查工具状态 | 低 |\n| `tergo-python-env` | 查看解释器路径、版本和环境前缀 | 低 |\n| `tergo-python-test` | 运行 pytest | 中 |\n| `tergo-python-lint` | 运行 ruff check | 中 |\n| `tergo-python-typecheck` | 运行 mypy | 中 |\n| `tergo-python-outdated` | 查看可更新依赖 | 中 |\n| `tergo-python-install-preview [target]` | 预览工具安装命令 | 低 |\n\n插件优先使用项目当前 PATH 和虚拟环境，不保存凭据。依赖过期检查可能访问包索引，使用前应确认当前网络和 pip/uv 的登录配置；插件不会打印包索引中的凭据。\n",
-      "updatedAt": "2026-10-29T00:06:30Z"
+      "updatedAt": "2026-10-29T00:23:35Z"
     },
     {
       "id": "release-workflow",
@@ -1161,7 +1290,7 @@
       ],
       "releaseNotes": "首个公开版本。",
       "readme": "# 发布工作流\n\n`release-workflow` 将常见的提交检查、变更摘要、版本检查和发布预览接入 Tergo。所有写操作都经过 Tergo 风险确认；插件只创建本地 Git tag，不会自动推送。\n\n## 命令\n\n| 命令 | 作用 | 风险 |\n| --- | --- | --- |\n| `tergo-release-status` | 查看分支、工作区、上游和最近标签 | 低 |\n| `tergo-release-commit-check` | 校验最近提交格式 | 低 |\n| `tergo-release-changelog` | 生成 Markdown 变更摘要 | 低 |\n| `tergo-release-version-check` | 检查项目版本字段 | 低 |\n| `tergo-release-preview` | 预览发布标签操作 | 中 |\n| `tergo-release-tag` | 创建本地 annotated tag | 高 |\n\n提交格式检查支持 `feat`、`fix`、`docs`、`style`、`refactor`、`perf`、`test`、`build`、`ci`、`chore` 和 `revert`。发布标签要求使用 SemVer，例如 `1.2.3` 或 `v1.2.3`，并且工作区必须干净。\n",
-      "updatedAt": "2026-10-29T00:06:30Z",
+      "updatedAt": "2026-10-29T00:23:35Z",
       "healthcheck": {
         "command": "git",
         "args": [
@@ -1265,7 +1394,7 @@
       ],
       "releaseNotes": "首个公开版本。",
       "readme": "# 项目安全扫描\n\n`security-scanner` 把常见的提交前安全检查接入 Tergo 命令面板。扫描器没有安装时，插件仍然可以加载，并会在调用命令时给出安装提示。\n\n## 命令\n\n| 命令 | 作用 | 依赖 |\n| --- | --- | --- |\n| `tergo-secret-scan` | 扫描疑似密钥，结果脱敏 | `gitleaks` |\n| `tergo-dependency-scan` | 扫描依赖漏洞 | `osv-scanner` |\n| `tergo-code-scan` | 执行 Semgrep 规则扫描 | `semgrep` |\n| `tergo-security-report` | 输出扫描范围和工具版本 | `git` |\n| `tergo-security-baseline` | 预览临时脱敏基线报告 | `gitleaks` |\n\n扫描结果不会上传到 Tergo。Semgrep 使用 `auto` 规则时可能根据自身配置下载规则，网络权限因此在清单中显式声明。插件不会读取或打印环境变量，也不会自动修改 `.gitignore`、配置文件或源码。\n",
-      "updatedAt": "2026-10-29T00:06:30Z",
+      "updatedAt": "2026-10-29T00:23:35Z",
       "healthcheck": {
         "command": "git",
         "args": [
@@ -1400,7 +1529,7 @@
       ],
       "releaseNotes": "首个公开版本。",
       "readme": "# Terraform 工作流\n\n`terraform-workflow` 把 Terraform/OpenTofu 的格式、校验、plan 和 workspace 查询集中到 Tergo。第一版只做读取、检查和预览，不执行 `apply`、不自动 `init`、不下载 provider，也不保存云凭据。\n\n## 命令\n\n| 命令 | 作用 | 风险 |\n| --- | --- | --- |\n| `tergo-terraform-report` | 查看工具、配置文件和初始化状态 | 低 |\n| `tergo-terraform-files` | 发现 `.tf` 和变量文件 | 低 |\n| `tergo-terraform-fmt-check` | 检查格式并显示差异 | 低 |\n| `tergo-terraform-validate` | 校验配置 | 中 |\n| `tergo-terraform-plan` | 预览资源变更 | 中 |\n| `tergo-terraform-workspace` | 查看当前 workspace | 低 |\n| `tergo-terraform-apply-preview` | 预览 apply 命令 | 低 |\n\n`plan` 可能访问远程状态、锁定后端或在输出中展示资源差异。插件关闭 plan 锁并且不使用 `-out` 保存计划，但用户仍应避免把输出发送到公共日志。真正的 apply、切换 workspace、provider 安装和 backend 初始化留给后续经过确认的高风险流程。\n",
-      "updatedAt": "2026-10-29T00:06:30Z"
+      "updatedAt": "2026-10-29T00:23:35Z"
     }
   ]
 }
