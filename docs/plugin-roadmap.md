@@ -131,6 +131,10 @@ Tergo 已有 Pod、日志和资源删除基础能力，在线插件只补 Helm r
 
 已优先交付 `terraform-workflow` 和 `k8s-helm-release`。Terraform 插件覆盖 fmt、validate、plan、workspace 和 apply 预览；Helm 插件覆盖 Release 查询、Chart lint、template、values、helm-diff 和 upgrade 预览。两个插件都不执行 apply、upgrade、rollback、删除或 provider/Chart 自动安装。下一步再根据用户安装来源选择 `cloud-context` 或 `container-registry`，避免同时扩大云账号和镜像仓库权限。
 
+### 阶段 4：镜像仓库（已完成第一版）
+
+已交付 `container-registry`。插件支持 Docker 本地镜像、crane 远程 digest/标签查询、Trivy 扫描预览和按完整 digest 的清理预览；不执行 login、push、delete，不读取或打印 Docker、Registry 和 GH_TOKEN 凭据。下一步优先补一个具体云厂商的只读上下文或单一可观测性后端。
+
 ## 每个插件的发布门槛
 
 进入 `stable` 前必须满足：
@@ -146,4 +150,4 @@ Tergo 已有 Pod、日志和资源删除基础能力，在线插件只补 Helm r
 
 ## 最终建议
 
-P0 已覆盖 API 调试、CI 运行和 Flutter 生态，阶段 2 已补足环境可复现性和 Python 生态，阶段 3 已补充 Terraform 与 Helm 的基础设施预览。下一步应根据真实用户需求选择 `cloud-context` 或 `container-registry`，继续保持只读和变更预览边界。
+P0 已覆盖 API 调试、CI 运行和 Flutter 生态，阶段 2 已补足环境可复现性和 Python 生态，阶段 3 已补充 Terraform 与 Helm，阶段 4 已补充镜像仓库工作流。下一步应在 `observability-readonly` 与具体云厂商的 `cloud-context` 中选择一个，继续保持只读和变更预览边界。

@@ -12,7 +12,7 @@ Tergo 当前已经提供：
 - zsh/bash 私有启动文件注入，不修改用户的 `.zshrc` 或 `.bashrc`；
 - 声明式 `manifest.json`、命令面板、参数输入、快捷键、风险确认和运行记录；
 - Git、Docker/Compose、Git Worktree、SSH、Kubernetes、项目任务、质量检查、运行时诊断、代码托管、远程会话、日志和端口诊断等内置能力；
-- 在线插件包括开发者工具箱、数据库工作台、安全扫描、发布工作流、API 调试工作台、CI 运行工作台、Flutter 工作流、环境诊断、Python 工作流、Terraform 工作流和 Helm 发布预览。
+- 在线插件包括开发者工具箱、数据库工作台、安全扫描、发布工作流、API 调试工作台、CI 运行工作台、Flutter 工作流、环境诊断、Python 工作流、Terraform 工作流、Helm 发布预览和镜像仓库工作流。
 
 当前在线插件真正可用的扩展面是 `command`。`panel`、`file-preview`、`settings` 和 `statusbar` 可以写入元数据，但在 Tergo UI 完成对应扩展点前只能作为规划信息，不能把它们当作已经存在的 UI 能力。
 
@@ -72,7 +72,7 @@ https://wfu-work.github.io/tergo-plugins/catalog/index.json
 | P1 | `terraform-workflow` | IaC、DevOps | 提供 `fmt`、`validate`、`plan`、变更摘要和状态检查，强化 plan 优先 | `terraform` 或 `tofu` | 中到高 |
 | P1 | `env-secrets-workflow` | 全栈、平台工程 | 检查当前环境变量来源、切换本地环境、执行脱敏后的环境报告 | `direnv`、`mise`、`doppler` 或 `1password` CLI | 中到高 |
 | P1 | `observability-tools` | SRE、后端 | 查看 Sentry、Grafana/Loki、云日志和告警摘要，优先链接到详情而不是把凭据带入 Shell | 对应官方 CLI 或 API 工具 | 中 |
-| P2 | `container-registry` | 发布、平台工程 | 登录状态、镜像标签、镜像体积和清理预览，覆盖 GHCR、ECR、Docker Hub 等 | `docker`、对应云 CLI | 中到高 |
+| P1 | `container-registry` | 发布、平台工程 | 登录状态、镜像标签、镜像摘要、扫描和清理预览，覆盖 GHCR、Docker Hub、ECR 等 | `docker`、`crane`、可选 `trivy` | 中 |
 | P1 | `k8s-helm-release` | Kubernetes 用户 | 在已有 Kubernetes 插件之上提供 Helm release、values diff、升级预览和回滚提示 | `helm`、`kubectl` | 中到高 |
 | P2 | `data-cli` | 数据分析、后端 | 用 DuckDB/SQLite 快速查看 CSV、JSON、Parquet 和本地数据库 | `duckdb` 或 `sqlite3` | 低到中 |
 | P2 | `docs-content` | 开发者、技术写作者 | Markdown lint、链接检查、目录生成、图片/文档预览和发布前检查 | `markdownlint`、`lychee` 或项目已有脚本 | 低 |
@@ -165,7 +165,8 @@ tergo-plugins/
 │   ├── env-doctor/
 │   ├── python-workflow/
 │   ├── terraform-workflow/
-│   └── k8s-helm-release/
+│   ├── k8s-helm-release/
+│   └── container-registry/
 ├── scripts/
 │   ├── package-plugin.sh           # 生成 .tergo-plugin 并计算 SHA-256
 │   ├── validate-plugin.sh          # 本地清单、Shell、依赖校验

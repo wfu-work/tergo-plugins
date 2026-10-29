@@ -22,6 +22,7 @@ CATEGORIES = {
     "python-workflow": "language",
     "terraform-workflow": "platform",
     "k8s-helm-release": "platform",
+    "container-registry": "platform",
 }
 
 

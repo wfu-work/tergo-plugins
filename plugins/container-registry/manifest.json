@@ -1,0 +1,86 @@
+{
+  "manifestVersion": 1,
+  "id": "container-registry",
+  "name": "镜像仓库工作流",
+  "version": "0.1.0",
+  "description": "查看本地和远程容器镜像摘要、标签与扫描预览，不执行登录、推送或删除。",
+  "category": "platform",
+  "shells": ["zsh", "bash"],
+  "entry": {
+    "zsh": "init.zsh",
+    "bash": "init.bash"
+  },
+  "capabilities": ["containers", "registry", "docker", "ghcr", "trivy", "diagnostics"],
+  "optionalCommands": ["docker", "crane", "trivy", "gh"],
+  "configSources": ["DOCKER_CONFIG", "REGISTRY_AUTH_FILE", "~/.docker/config.json", "GH_TOKEN"],
+  "redaction": {
+    "mode": "omit-values",
+    "fields": ["docker-credentials", "registry-tokens", "gh-token", "image-config-secrets"]
+  },
+  "platforms": ["darwin", "linux"],
+  "minTergoVersion": "0.2.0",
+  "permissions": ["filesystem", "process", "network"],
+  "surfaces": ["command"],
+  "commands": [
+    {
+      "id": "report",
+      "name": "查看镜像仓库工具",
+      "description": "查看 Docker、crane、Trivy 和 gh 的安装状态，不访问远程仓库。",
+      "command": "tergo-registry-report",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "local-images",
+      "name": "查看本地镜像",
+      "description": "列出 Docker 本地镜像、ID 和体积。",
+      "command": "tergo-registry-local-images",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "digest",
+      "name": "查看镜像摘要",
+      "description": "使用 crane 或 Docker 查看远程镜像 digest 和 manifest。",
+      "command": "tergo-registry-digest {{arg:image}}",
+      "mode": "execute",
+      "risk": "medium",
+      "arguments": [
+        {"name": "image", "label": "镜像引用", "required": true}
+      ]
+    },
+    {
+      "id": "tags",
+      "name": "查看远程标签",
+      "description": "使用 crane 列出仓库标签，不打印认证信息。",
+      "command": "tergo-registry-tags {{arg:repository}}",
+      "mode": "execute",
+      "risk": "medium",
+      "arguments": [
+        {"name": "repository", "label": "仓库引用", "required": true}
+      ]
+    },
+    {
+      "id": "scan-preview",
+      "name": "预览镜像扫描",
+      "description": "生成 Trivy 漏洞、Secret 和配置扫描命令，不执行扫描。",
+      "command": "tergo-registry-scan-preview {{arg:image}}",
+      "mode": "execute",
+      "risk": "low",
+      "arguments": [
+        {"name": "image", "label": "镜像引用", "required": true}
+      ]
+    },
+    {
+      "id": "cleanup-preview",
+      "name": "预览镜像清理",
+      "description": "仅对完整 digest 生成 crane 删除命令，不执行删除。",
+      "command": "tergo-registry-cleanup-preview {{arg:image}}",
+      "mode": "execute",
+      "risk": "low",
+      "arguments": [
+        {"name": "image", "label": "带 digest 的镜像引用", "required": true}
+      ]
+    }
+  ]
+}

@@ -52,5 +52,7 @@ run_zsh 'cd "$1"; source "$2/terraform-workflow/init.zsh"; tergo-terraform-repor
 run_bash 'cd "$1"; source "$2/terraform-workflow/init.bash"; tergo-terraform-report >/dev/null; tergo-terraform-files >/dev/null'
 run_zsh 'cd "$1"; source "$2/k8s-helm-release/init.zsh"; tergo-helm-report >/dev/null'
 run_bash 'cd "$1"; source "$2/k8s-helm-release/init.bash"; tergo-helm-report >/dev/null'
+run_zsh 'cd "$1"; source "$2/container-registry/init.zsh"; tergo-registry-report >/dev/null; tergo-registry-scan-preview alpine:latest >/dev/null; tergo-registry-cleanup-preview alpine@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef >/dev/null'
+run_bash 'cd "$1"; source "$2/container-registry/init.bash"; tergo-registry-report >/dev/null; tergo-registry-scan-preview alpine:latest >/dev/null; tergo-registry-cleanup-preview alpine@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef >/dev/null'
 
 printf '%s\n' 'online plugin smoke tests passed'
