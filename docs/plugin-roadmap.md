@@ -139,6 +139,10 @@ Tergo 已有 Pod、日志和资源删除基础能力，在线插件只补 Helm r
 
 已交付 `observability-readonly`，第一版先支持 Sentry。插件提供项目状态、未解决错误、Release、按小时事件统计和链接生成；Token 只从环境变量读取，响应只输出经过 jq 提取的摘要，不上传事件、不修改 Issue 或 Release。Grafana/Loki、云日志和告警写操作留到后续独立插件。
 
+### 阶段 6：云上下文（已完成第一版）
+
+已交付 `aws-context`，第一版只支持 AWS CLI 的 profile、区域、STS 当前身份、可用区域和控制台链接。插件复用 AWS CLI 已有登录状态，不读取或输出凭据，不执行部署、删除、IAM 权限变更或角色切换。GCP、Azure、阿里云和腾讯云应分别评估用户需求后独立实现。
+
 ## 每个插件的发布门槛
 
 进入 `stable` 前必须满足：
@@ -154,4 +158,4 @@ Tergo 已有 Pod、日志和资源删除基础能力，在线插件只补 Helm r
 
 ## 最终建议
 
-P0 已覆盖 API 调试、CI 运行和 Flutter 生态，阶段 2 已补足环境可复现性和 Python 生态，阶段 3 已补充 Terraform 与 Helm，阶段 4 已补充镜像仓库，阶段 5 已补充 Sentry 只读观测。下一步应选择具体云厂商的 `cloud-context` 或 Grafana/Loki 只读适配器，继续保持只读和变更预览边界。
+P0 已覆盖 API 调试、CI 运行和 Flutter 生态，阶段 2 已补足环境可复现性和 Python 生态，阶段 3 已补充 Terraform 与 Helm，阶段 4 已补充镜像仓库，阶段 5 已补充 Sentry 只读观测，阶段 6 已补充 AWS 上下文诊断。下一步应根据用户来源选择 GCP/Azure/阿里云/腾讯云上下文或 Grafana/Loki 只读适配器，继续保持只读和变更预览边界。

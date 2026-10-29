@@ -1,0 +1,94 @@
+{
+  "manifestVersion": 1,
+  "id": "aws-context",
+  "name": "AWS 上下文诊断",
+  "version": "0.1.0",
+  "description": "只读查看 AWS profile、区域、当前身份和可用区域，不输出凭据或执行资源变更。",
+  "category": "platform",
+  "shells": ["zsh", "bash"],
+  "entry": {
+    "zsh": "init.zsh",
+    "bash": "init.bash"
+  },
+  "capabilities": ["aws", "cloud", "identity", "regions", "diagnostics"],
+  "optionalCommands": ["aws"],
+  "configSources": ["AWS_PROFILE", "AWS_REGION", "AWS_DEFAULT_REGION", "AWS_CONFIG_FILE", "AWS_SHARED_CREDENTIALS_FILE", "AWS_SSO_SESSION_NAME", "AWS_WEB_IDENTITY_TOKEN_FILE", "~/.aws/config", "~/.aws/credentials"],
+  "redaction": {
+    "mode": "omit-values",
+    "fields": ["access-key", "secret-key", "session-token", "credential-files", "web-identity-token"]
+  },
+  "platforms": ["darwin", "linux"],
+  "minTergoVersion": "0.2.0",
+  "permissions": ["filesystem", "process", "network"],
+  "surfaces": ["command"],
+  "commands": [
+    {
+      "id": "report",
+      "name": "查看 AWS 工具",
+      "description": "查看 AWS CLI、profile、区域和凭据来源状态，不访问 AWS API。",
+      "command": "tergo-aws-report",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "config-sources",
+      "name": "查看 AWS 配置来源",
+      "description": "只显示 AWS 配置和凭据文件是否存在，不读取文件内容。",
+      "command": "tergo-aws-config-sources",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "profiles",
+      "name": "查看 AWS Profile",
+      "description": "列出 AWS CLI profile 名称，不显示凭据。",
+      "command": "tergo-aws-profiles",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "identity",
+      "name": "查看 AWS 当前身份",
+      "description": "通过 STS 读取当前账号、ARN 和 UserId。",
+      "command": "tergo-aws-identity {{arg:profile|}}",
+      "mode": "execute",
+      "risk": "medium",
+      "arguments": [
+        {"name": "profile", "label": "AWS Profile", "description": "留空使用 AWS_PROFILE 或 default"}
+      ]
+    },
+    {
+      "id": "region",
+      "name": "查看 AWS 区域",
+      "description": "查看指定 profile 的默认区域，不切换配置。",
+      "command": "tergo-aws-region {{arg:profile|}}",
+      "mode": "execute",
+      "risk": "low",
+      "arguments": [
+        {"name": "profile", "label": "AWS Profile", "description": "留空使用 AWS_PROFILE 或 default"}
+      ]
+    },
+    {
+      "id": "regions",
+      "name": "查看可用区域",
+      "description": "读取 AWS 区域列表，不创建或修改资源。",
+      "command": "tergo-aws-regions {{arg:profile|}}",
+      "mode": "execute",
+      "risk": "medium",
+      "arguments": [
+        {"name": "profile", "label": "AWS Profile", "description": "留空使用 AWS_PROFILE 或 default"}
+      ]
+    },
+    {
+      "id": "console-link",
+      "name": "生成 AWS 控制台链接",
+      "description": "生成当前账号和区域的控制台链接，不执行浏览器登录或资源操作。",
+      "command": "tergo-aws-console-link {{arg:profile|}}",
+      "mode": "execute",
+      "risk": "low",
+      "arguments": [
+        {"name": "profile", "label": "AWS Profile", "description": "留空使用 AWS_PROFILE 或 default"}
+      ]
+    }
+  ]
+}
