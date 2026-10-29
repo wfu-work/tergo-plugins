@@ -25,6 +25,7 @@ CATEGORIES = {
     "container-registry": "platform",
     "observability-readonly": "platform",
     "aws-context": "platform",
+    "gcp-context": "platform",
 }
 
 

@@ -58,5 +58,7 @@ run_zsh 'cd "$1"; source "$2/observability-readonly/init.zsh"; SENTRY_ORG=demo S
 run_bash 'cd "$1"; source "$2/observability-readonly/init.bash"; SENTRY_ORG=demo SENTRY_PROJECT=web tergo-observability-report >/dev/null; SENTRY_ORG=demo SENTRY_PROJECT=web tergo-observability-config >/dev/null; SENTRY_ORG=demo SENTRY_PROJECT=web tergo-observability-links >/dev/null'
 run_zsh 'cd "$1"; source "$2/aws-context/init.zsh"; AWS_PROFILE=demo AWS_REGION=us-east-1 tergo-aws-report >/dev/null; AWS_PROFILE=demo AWS_REGION=us-east-1 tergo-aws-config-sources >/dev/null'
 run_bash 'cd "$1"; source "$2/aws-context/init.bash"; AWS_PROFILE=demo AWS_REGION=us-east-1 tergo-aws-report >/dev/null; AWS_PROFILE=demo AWS_REGION=us-east-1 tergo-aws-config-sources >/dev/null'
+run_zsh 'cd "$1"; source "$2/gcp-context/init.zsh"; CLOUDSDK_ACTIVE_CONFIG_NAME=demo GCLOUD_PROJECT=demo-project tergo-gcp-report >/dev/null; CLOUDSDK_ACTIVE_CONFIG_NAME=demo GCLOUD_PROJECT=demo-project tergo-gcp-config-sources >/dev/null'
+run_bash 'cd "$1"; source "$2/gcp-context/init.bash"; CLOUDSDK_ACTIVE_CONFIG_NAME=demo GCLOUD_PROJECT=demo-project tergo-gcp-report >/dev/null; CLOUDSDK_ACTIVE_CONFIG_NAME=demo GCLOUD_PROJECT=demo-project tergo-gcp-config-sources >/dev/null'
 
 printf '%s\n' 'online plugin smoke tests passed'

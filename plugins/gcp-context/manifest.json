@@ -1,0 +1,82 @@
+{
+  "manifestVersion": 1,
+  "id": "gcp-context",
+  "name": "GCP 上下文诊断",
+  "version": "0.1.0",
+  "description": "只读查看 gcloud 配置、账号、项目、区域和控制台链接，不输出服务账号密钥。",
+  "category": "platform",
+  "shells": ["zsh", "bash"],
+  "entry": {
+    "zsh": "init.zsh",
+    "bash": "init.bash"
+  },
+  "capabilities": ["gcp", "cloud", "identity", "regions", "diagnostics"],
+  "optionalCommands": ["gcloud"],
+  "configSources": ["CLOUDSDK_ACTIVE_CONFIG_NAME", "CLOUDSDK_CONFIG", "GCLOUD_PROJECT", "GOOGLE_CLOUD_PROJECT", "CLOUDSDK_COMPUTE_REGION", "CLOUDSDK_COMPUTE_ZONE", "GOOGLE_APPLICATION_CREDENTIALS", "CLOUDSDK_AUTH_ACCESS_TOKEN"],
+  "redaction": {
+    "mode": "omit-values",
+    "fields": ["service-account-key", "access-token", "credential-files", "application-default-credentials"]
+  },
+  "platforms": ["darwin", "linux"],
+  "minTergoVersion": "0.2.0",
+  "permissions": ["filesystem", "process", "network"],
+  "surfaces": ["command"],
+  "commands": [
+    {
+      "id": "report",
+      "name": "查看 GCP 工具",
+      "description": "查看 gcloud、配置、项目、区域和凭据来源状态，不访问 GCP API。",
+      "command": "tergo-gcp-report",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "config-sources",
+      "name": "查看 GCP 配置来源",
+      "description": "只显示 gcloud 配置目录和凭据来源是否存在，不读取文件内容。",
+      "command": "tergo-gcp-config-sources",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "configs",
+      "name": "查看 gcloud 配置",
+      "description": "列出 gcloud 配置名称，不显示 Token 或密钥。",
+      "command": "tergo-gcp-configs",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "identity",
+      "name": "查看 GCP 当前账号",
+      "description": "读取当前活动账号，不输出访问令牌。",
+      "command": "tergo-gcp-identity",
+      "mode": "execute",
+      "risk": "medium"
+    },
+    {
+      "id": "context",
+      "name": "查看 GCP 上下文",
+      "description": "查看当前配置、项目、区域和可用区。",
+      "command": "tergo-gcp-context",
+      "mode": "execute",
+      "risk": "low"
+    },
+    {
+      "id": "regions",
+      "name": "查看 GCP 区域",
+      "description": "读取当前项目可见的 Compute 区域，不创建或修改资源。",
+      "command": "tergo-gcp-regions",
+      "mode": "execute",
+      "risk": "medium"
+    },
+    {
+      "id": "console-link",
+      "name": "生成 GCP 控制台链接",
+      "description": "生成当前项目的 Google Cloud 控制台链接，不执行资源操作。",
+      "command": "tergo-gcp-console-link",
+      "mode": "execute",
+      "risk": "low"
+    }
+  ]
+}
