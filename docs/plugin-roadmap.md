@@ -147,6 +147,17 @@ Tergo 已有 Pod、日志和资源删除基础能力，在线插件只补 Helm r
 
 已交付 `gcp-context`，第一版只支持 gcloud 配置、活动账号、项目、区域、可用区和控制台链接。插件复用 gcloud 已有登录状态，不读取或输出服务账号密钥、OAuth Token 或凭据文件，不执行部署、删除或 IAM 权限变更。Azure、阿里云和腾讯云仍应分别评估用户需求后独立实现。
 
+### 阶段 8：语言生态（已完成第一版）
+
+已交付四个独立的语言工作流插件：
+
+- `go-workflow`：Go module、测试、vet、gofmt、Staticcheck、govulncheck 和构建预览；
+- `rust-workflow`：Cargo check、test、Clippy、fmt、cargo-audit、依赖更新和构建预览；
+- `java-workflow`：自动识别 Maven/Gradle，提供 JDK 报告、依赖树、测试、检查、更新查询和构建预览；
+- `vue-workflow`：识别 npm/pnpm/Yarn/Bun，提供 lockfile、vue-tsc、ESLint、Vitest、依赖审计和 Vite 构建预览。
+
+四个插件都优先使用项目现有 Wrapper 或 PATH 中的工具，不自动安装依赖、修改 lockfile、发布构件或输出凭据。下一阶段建议根据实际安装来源，在 `proto-workflow`、`monorepo-workflow`、Azure 上下文和 Grafana/Loki 只读适配器中选择一个继续实现。
+
 ## 每个插件的发布门槛
 
 进入 `stable` 前必须满足：
@@ -162,4 +173,4 @@ Tergo 已有 Pod、日志和资源删除基础能力，在线插件只补 Helm r
 
 ## 最终建议
 
-P0 已覆盖 API 调试、CI 运行和 Flutter 生态，阶段 2 已补足环境可复现性和 Python 生态，阶段 3 已补充 Terraform 与 Helm，阶段 4 已补充镜像仓库，阶段 5 已补充 Sentry 只读观测，阶段 6 已补充 AWS 上下文诊断，阶段 7 已补充 GCP 上下文诊断。下一步应根据用户来源选择 Azure/阿里云/腾讯云上下文或 Grafana/Loki 只读适配器，继续保持只读和变更预览边界。
+P0 已覆盖 API 调试、CI 运行和 Flutter 生态，阶段 2 已补足环境可复现性和 Python 生态，阶段 3 已补充 Terraform 与 Helm，阶段 4 已补充镜像仓库，阶段 5 已补充 Sentry 只读观测，阶段 6 已补充 AWS 上下文诊断，阶段 7 已补充 GCP 上下文诊断，阶段 8 已补充 Go、Rust、Java 和 Vue 生态。下一步应根据用户来源选择协议、Monorepo、Azure 上下文或 Grafana/Loki 只读适配器，继续保持只读和变更预览边界。

@@ -12,7 +12,7 @@ Tergo 当前已经提供：
 - zsh/bash 私有启动文件注入，不修改用户的 `.zshrc` 或 `.bashrc`；
 - 声明式 `manifest.json`、命令面板、参数输入、快捷键、风险确认和运行记录；
 - Git、Docker/Compose、Git Worktree、SSH、Kubernetes、项目任务、质量检查、运行时诊断、代码托管、远程会话、日志和端口诊断等内置能力；
-- 在线插件包括开发者工具箱、数据库工作台、安全扫描、发布工作流、API 调试工作台、CI 运行工作台、Flutter 工作流、环境诊断、Python 工作流、Terraform 工作流、Helm 发布预览、镜像仓库工作流、可观测性只读工作台、AWS 上下文诊断和 GCP 上下文诊断。
+- 在线插件包括开发者工具箱、数据库工作台、安全扫描、发布工作流、API 调试工作台、CI 运行工作台、Flutter 工作流、环境诊断、Python 工作流、Go 工作流、Rust 工作流、Java 工作流、Vue 工作流、Terraform 工作流、Helm 发布预览、镜像仓库工作流、可观测性只读工作台、AWS 上下文诊断和 GCP 上下文诊断。
 
 当前在线插件真正可用的扩展面是 `command`。`panel`、`file-preview`、`settings` 和 `statusbar` 可以写入元数据，但在 Tergo UI 完成对应扩展点前只能作为规划信息，不能把它们当作已经存在的 UI 能力。
 
@@ -76,6 +76,10 @@ https://wfu-work.github.io/tergo-plugins/catalog/index.json
 | P1 | `observability-readonly` | SRE、后端、平台工程 | 只读查看 Sentry 项目状态、未解决错误、Release 和事件统计 | `curl`、`jq`，可选 `sentry-cli` | 中 |
 | P1 | `aws-context` | 云开发、平台工程 | 只读查看 AWS profile、区域、当前身份和可用区域 | `aws` | 中 |
 | P1 | `gcp-context` | 云开发、平台工程 | 只读查看 gcloud 配置、账号、项目、区域和控制台链接 | `gcloud` | 中 |
+| P1 | `go-workflow` | Go 开发者、后端、平台工程 | 统一 Go 模块、格式、测试、vet、静态分析、漏洞扫描和构建预览 | `go`，可选 `staticcheck`/`govulncheck` | 中 |
+| P1 | `rust-workflow` | Rust 开发者、系统工程 | 统一 Cargo 检查、测试、Clippy、格式、依赖审计和构建预览 | `cargo`，可选 `cargo-audit`/`cargo-outdated` | 中 |
+| P1 | `java-workflow` | Java 后端、企业开发 | 自动识别 Maven/Gradle，提供 JDK 报告、依赖树、测试和构建预览 | `java`，可选 `mvn`/`gradle` | 中 |
+| P1 | `vue-workflow` | Vue、前端开发者 | 识别 Node 包管理器，检查 lockfile、类型、Lint、Vitest、依赖和构建 | `node`，可选 `npm`/`pnpm`/`yarn`/`bun` | 中 |
 | P1 | `k8s-helm-release` | Kubernetes 用户 | 在已有 Kubernetes 插件之上提供 Helm release、values diff、升级预览和回滚提示 | `helm`、`kubectl` | 中到高 |
 | P2 | `data-cli` | 数据分析、后端 | 用 DuckDB/SQLite 快速查看 CSV、JSON、Parquet 和本地数据库 | `duckdb` 或 `sqlite3` | 低到中 |
 | P2 | `docs-content` | 开发者、技术写作者 | Markdown lint、链接检查、目录生成、图片/文档预览和发布前检查 | `markdownlint`、`lychee` 或项目已有脚本 | 低 |
@@ -167,6 +171,10 @@ tergo-plugins/
 │   ├── flutter-workflow/
 │   ├── env-doctor/
 │   ├── python-workflow/
+│   ├── go-workflow/
+│   ├── rust-workflow/
+│   ├── java-workflow/
+│   ├── vue-workflow/
 │   ├── terraform-workflow/
 │   ├── k8s-helm-release/
 │   ├── container-registry/
@@ -254,13 +262,12 @@ tergo-plugins/
 - 增加 changelog、版本一致性和 dry-run 流程；
 - 与现有 Git、项目任务、代码托管内置插件联调。
 
-### 第 9～12 周：垂直扩展
+### 第 9～12 周：语言生态（已完成第一版）
 
-- 根据真实使用数据选择 `terraform-workflow`、`api-workbench` 或某个云厂商插件；
-- 再考虑 `panel`、`file-preview`、`statusbar` 扩展点，避免先为尚未支持的 UI 设计大量插件；
-- 对高风险插件增加签名、来源标记和更细的权限说明。
+- 已交付 `go-workflow`、`rust-workflow`、`java-workflow` 和 `vue-workflow`，覆盖 Go、Rust、Maven/Gradle、Vue/Vite/TypeScript 的高频检查和预览流程；所有安装、构建、发布和依赖更新动作继续保持显式执行或只读预览。
+- 下一阶段建议按用户来源选择 `proto-workflow`、`monorepo-workflow` 或 Azure/Grafana/Loki 的单一只读适配器，避免继续扩大一个插件的权限边界。
 
 ## 建议的第一批发布顺序
 
-第一批已落地 `developer-toolbox`、`database-workbench`、`security-scanner`、`release-workflow`、`api-workbench`、`ci-workflow` 和 `flutter-workflow`；阶段 2 已补充 `env-doctor` 与 `python-workflow`。它们依赖常见 CLI、只需命令面板即可提供价值，并且验证了在线插件的安装、诊断、风险确认、日志脱敏和升级回滚链路。下一阶段应根据安装和使用反馈选择云厂商、Kubernetes、容器仓库或 Terraform 工作流。
+第一批已落地 `developer-toolbox`、`database-workbench`、`security-scanner`、`release-workflow`、`api-workbench`、`ci-workflow` 和 `flutter-workflow`；阶段 2 已补充 `env-doctor` 与 `python-workflow`；基础设施、镜像仓库、可观测性和 AWS/GCP 上下文阶段也已完成；本阶段继续补充 `go-workflow`、`rust-workflow`、`java-workflow` 和 `vue-workflow`。它们依赖常见 CLI、只需命令面板即可提供价值，并且保持了安装、诊断、风险确认、日志脱敏和升级回滚边界。下一步应根据安装和使用反馈选择协议、Monorepo 或单一云/观测后端适配器。
 

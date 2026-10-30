@@ -10,12 +10,27 @@ bash_bin=$(command -v bash || true)
 project_root=${TERGO_SMOKE_PROJECT_ROOT:-}
 if [ -z "$project_root" ]; then
   project_root=$(mktemp -d "${TMPDIR:-/tmp}/tergo-plugin-smoke.XXXXXX")
-  trap 'rm -rf "$project_root"' EXIT HUP INT TERM
   git -C "$project_root" init -q
   printf '%s\n' 'Tergo smoke fixture' > "$project_root/README.md"
   git -C "$project_root" add README.md
   git -C "$project_root" -c user.name='Tergo Smoke' -c user.email='smoke@tergo.local' commit -q -m 'chore: add smoke fixture'
-elif [ ! -d "$project_root" ]; then
+fi
+
+language_root=$(mktemp -d "${TMPDIR:-/tmp}/tergo-language-smoke.XXXXXX")
+printf '%s\n' 'module example.com/smoke' > "$language_root/go.mod"
+cat > "$language_root/Cargo.toml" <<'EOF'
+[package]
+name = "tergo-smoke"
+version = "0.1.0"
+EOF
+printf '%s\n' '<project></project>' > "$language_root/pom.xml"
+printf '%s\n' '{}' > "$language_root/package.json"
+if [ -n "${TERGO_SMOKE_PROJECT_ROOT:-}" ]; then
+  trap 'rm -rf "$language_root"' EXIT HUP INT TERM
+else
+  trap 'rm -rf "$project_root" "$language_root"' EXIT HUP INT TERM
+fi
+if [ ! -d "$project_root" ]; then
   printf '测试项目不存在：%s\n' "$project_root" >&2
   exit 1
 fi
@@ -28,6 +43,16 @@ run_zsh() {
 run_bash() {
   [ -n "$bash_bin" ] || return 0
   "$bash_bin" --noprofile --norc -c "$1" bash "$project_root" "$plugins"
+}
+
+run_language_zsh() {
+  [ -n "$zsh_bin" ] || return 0
+  TERGO_PROJECT_ROOT="$language_root" "$zsh_bin" -f -c "$1" zsh "$language_root" "$plugins"
+}
+
+run_language_bash() {
+  [ -n "$bash_bin" ] || return 0
+  TERGO_PROJECT_ROOT="$language_root" "$bash_bin" --noprofile --norc -c "$1" bash "$language_root" "$plugins"
 }
 
 run_zsh 'cd "$1"; source "$2/developer-toolbox/init.zsh"; tergo-tool-report >/dev/null; tergo-search Tergo >/dev/null; tergo-preview README.md >/dev/null; tergo-files README >/dev/null'
@@ -60,5 +85,13 @@ run_zsh 'cd "$1"; source "$2/aws-context/init.zsh"; AWS_PROFILE=demo AWS_REGION=
 run_bash 'cd "$1"; source "$2/aws-context/init.bash"; AWS_PROFILE=demo AWS_REGION=us-east-1 tergo-aws-report >/dev/null; AWS_PROFILE=demo AWS_REGION=us-east-1 tergo-aws-config-sources >/dev/null'
 run_zsh 'cd "$1"; source "$2/gcp-context/init.zsh"; CLOUDSDK_ACTIVE_CONFIG_NAME=demo GCLOUD_PROJECT=demo-project tergo-gcp-report >/dev/null; CLOUDSDK_ACTIVE_CONFIG_NAME=demo GCLOUD_PROJECT=demo-project tergo-gcp-config-sources >/dev/null'
 run_bash 'cd "$1"; source "$2/gcp-context/init.bash"; CLOUDSDK_ACTIVE_CONFIG_NAME=demo GCLOUD_PROJECT=demo-project tergo-gcp-report >/dev/null; CLOUDSDK_ACTIVE_CONFIG_NAME=demo GCLOUD_PROJECT=demo-project tergo-gcp-config-sources >/dev/null'
+run_language_zsh 'cd "$1"; source "$2/go-workflow/init.zsh"; tergo-go-report >/dev/null; tergo-go-files >/dev/null; tergo-go-build-preview >/dev/null'
+run_language_bash 'cd "$1"; source "$2/go-workflow/init.bash"; tergo-go-report >/dev/null; tergo-go-files >/dev/null; tergo-go-build-preview >/dev/null'
+run_language_zsh 'cd "$1"; source "$2/rust-workflow/init.zsh"; tergo-rust-report >/dev/null; tergo-rust-files >/dev/null; tergo-rust-build-preview >/dev/null'
+run_language_bash 'cd "$1"; source "$2/rust-workflow/init.bash"; tergo-rust-report >/dev/null; tergo-rust-files >/dev/null; tergo-rust-build-preview >/dev/null'
+run_language_zsh 'cd "$1"; source "$2/java-workflow/init.zsh"; tergo-java-report >/dev/null; tergo-java-files >/dev/null; tergo-java-build-preview >/dev/null'
+run_language_bash 'cd "$1"; source "$2/java-workflow/init.bash"; tergo-java-report >/dev/null; tergo-java-files >/dev/null; tergo-java-build-preview >/dev/null'
+run_language_zsh 'cd "$1"; source "$2/vue-workflow/init.zsh"; tergo-vue-report >/dev/null; tergo-vue-files >/dev/null; tergo-vue-build-preview >/dev/null'
+run_language_bash 'cd "$1"; source "$2/vue-workflow/init.bash"; tergo-vue-report >/dev/null; tergo-vue-files >/dev/null; tergo-vue-build-preview >/dev/null'
 
 printf '%s\n' 'online plugin smoke tests passed'

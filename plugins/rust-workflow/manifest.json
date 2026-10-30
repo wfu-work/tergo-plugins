@@ -1,0 +1,29 @@
+{
+  "manifestVersion": 1,
+  "id": "rust-workflow",
+  "name": "Rust 工作流",
+  "version": "0.1.0",
+  "description": "检查 Rust 工具链、格式、编译、测试、Clippy 和依赖风险，并提供构建预览。",
+  "category": "language",
+  "shells": ["zsh", "bash"],
+  "entry": {"zsh": "init.zsh", "bash": "init.bash"},
+  "capabilities": ["rust", "cargo", "testing", "clippy", "vulnerability-scan"],
+  "optionalCommands": ["rustc", "cargo", "rustfmt", "cargo-audit", "cargo-outdated"],
+  "configSources": ["Cargo.toml", "Cargo.lock", "rust-toolchain.toml", "rust-toolchain", "CARGO_HOME", "RUSTUP_TOOLCHAIN"],
+  "redaction": {"mode": "omit-values", "fields": ["registry-credentials", "private-crate-paths", "environment-values"]},
+  "platforms": ["darwin", "linux"],
+  "minTergoVersion": "0.2.0",
+  "permissions": ["filesystem", "process", "network"],
+  "surfaces": ["command"],
+  "commands": [
+    {"id": "report", "name": "查看 Rust 工具", "description": "查看 Rust 工具链、Cargo 项目和检查工具状态。", "command": "tergo-rust-report", "mode": "execute", "risk": "low"},
+    {"id": "files", "name": "发现 Rust 文件", "description": "列出 Cargo 清单、锁定文件和 Rust 源码。", "command": "tergo-rust-files", "mode": "execute", "risk": "low"},
+    {"id": "check", "name": "检查 Rust 项目", "description": "运行 cargo check，不执行发布或安装。", "command": "tergo-rust-check", "mode": "execute", "risk": "medium"},
+    {"id": "test", "name": "运行 Rust 测试", "description": "运行 Cargo 测试套件。", "command": "tergo-rust-test", "mode": "execute", "risk": "medium"},
+    {"id": "clippy", "name": "运行 Clippy", "description": "使用 Clippy 检查 Rust 代码并将警告视为错误。", "command": "tergo-rust-clippy", "mode": "execute", "risk": "medium"},
+    {"id": "fmt-check", "name": "检查 Rust 格式", "description": "检查 cargo fmt 格式，不直接写回文件。", "command": "tergo-rust-fmt-check", "mode": "execute", "risk": "low"},
+    {"id": "audit", "name": "扫描 Rust 依赖", "description": "使用 cargo-audit 扫描 Cargo.lock 中的已知漏洞。", "command": "tergo-rust-audit", "mode": "execute", "risk": "medium"},
+    {"id": "outdated", "name": "检查 Rust 依赖", "description": "查询 crates.io 依赖更新，不修改清单或锁定文件。", "command": "tergo-rust-outdated", "mode": "execute", "risk": "medium"},
+    {"id": "build-preview", "name": "预览 Rust 构建", "description": "展示 cargo build --release，不执行构建或发布。", "command": "tergo-rust-build-preview", "mode": "execute", "risk": "low"}
+  ]
+}

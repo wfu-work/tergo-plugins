@@ -1,0 +1,28 @@
+{
+  "manifestVersion": 1,
+  "id": "vue-workflow",
+  "name": "Vue 工作流",
+  "version": "0.1.0",
+  "description": "检查 Node 与包管理器、Vue/Vite/TypeScript 项目，提供 lockfile、类型、Lint、Vitest、依赖审计和构建预览。",
+  "category": "language",
+  "shells": ["zsh", "bash"],
+  "entry": {"zsh": "init.zsh", "bash": "init.bash"},
+  "capabilities": ["vue", "vite", "typescript", "eslint", "vitest", "frontend"],
+  "optionalCommands": ["node", "npm", "pnpm", "yarn", "bun", "vue-tsc", "eslint", "vitest", "vite"],
+  "configSources": ["package.json", "pnpm-lock.yaml", "package-lock.json", "yarn.lock", "bun.lock", "vite.config.*", "tsconfig*.json", "VITE_*", "NODE_ENV"],
+  "redaction": {"mode": "omit-values", "fields": ["npmrc-tokens", "registry-credentials", "environment-values", "source-map-paths"]},
+  "platforms": ["darwin", "linux"],
+  "minTergoVersion": "0.2.0",
+  "permissions": ["filesystem", "process", "network"],
+  "surfaces": ["command"],
+  "commands": [
+    {"id": "report", "name": "查看 Vue 工具", "description": "查看 Node、包管理器、Vue/Vite/TypeScript 和检查工具状态。", "command": "tergo-vue-report", "mode": "execute", "risk": "low"},
+    {"id": "files", "name": "发现 Vue 文件", "description": "列出 package、lockfile、Vue、Vite 和 TypeScript 配置文件。", "command": "tergo-vue-files", "mode": "execute", "risk": "low"},
+    {"id": "lockfile", "name": "检查前端锁定文件", "description": "识别项目包管理器并检查是否存在 lockfile。", "command": "tergo-vue-lockfile", "mode": "execute", "risk": "low"},
+    {"id": "typecheck", "name": "检查 Vue 类型", "description": "使用 vue-tsc 进行 TypeScript/Vue 类型检查。", "command": "tergo-vue-typecheck", "mode": "execute", "risk": "medium"},
+    {"id": "lint", "name": "检查前端代码", "description": "使用 ESLint 检查 Vue/TypeScript 项目。", "command": "tergo-vue-lint", "mode": "execute", "risk": "medium"},
+    {"id": "test", "name": "运行 Vue 测试", "description": "使用 Vitest 运行前端测试。", "command": "tergo-vue-test", "mode": "execute", "risk": "medium"},
+    {"id": "audit", "name": "审计前端依赖", "description": "使用当前包管理器查询依赖漏洞，不修改项目文件。", "command": "tergo-vue-audit", "mode": "execute", "risk": "medium"},
+    {"id": "build-preview", "name": "预览 Vue 构建", "description": "展示项目 build 命令，不安装依赖、不执行构建或发布。", "command": "tergo-vue-build-preview", "mode": "execute", "risk": "low"}
+  ]
+}

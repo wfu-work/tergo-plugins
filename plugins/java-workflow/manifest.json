@@ -1,0 +1,27 @@
+{
+  "manifestVersion": 1,
+  "id": "java-workflow",
+  "name": "Java 工作流",
+  "version": "0.1.0",
+  "description": "自动识别 Maven 或 Gradle，提供 JDK 报告、依赖树、测试、检查、依赖更新预览和构建预览。",
+  "category": "language",
+  "shells": ["zsh", "bash"],
+  "entry": {"zsh": "init.zsh", "bash": "init.bash"},
+  "capabilities": ["java", "maven", "gradle", "testing", "dependencies"],
+  "optionalCommands": ["java", "javac", "mvn", "gradle"],
+  "configSources": ["pom.xml", "mvnw", "build.gradle", "build.gradle.kts", "gradlew", "settings.gradle", "JAVA_HOME", "MAVEN_OPTS", "GRADLE_USER_HOME"],
+  "redaction": {"mode": "omit-values", "fields": ["repository-credentials", "signing-credentials", "environment-values", "private-dependency-paths"]},
+  "platforms": ["darwin", "linux"],
+  "minTergoVersion": "0.2.0",
+  "permissions": ["filesystem", "process", "network"],
+  "surfaces": ["command"],
+  "commands": [
+    {"id": "report", "name": "查看 Java 工具", "description": "查看 JDK、Maven、Gradle 和项目构建系统状态。", "command": "tergo-java-report", "mode": "execute", "risk": "low"},
+    {"id": "files", "name": "发现 Java 文件", "description": "列出 Java 源码和 Maven/Gradle 构建文件。", "command": "tergo-java-files", "mode": "execute", "risk": "low"},
+    {"id": "dependencies", "name": "查看 Java 依赖树", "description": "显示 Maven 或 Gradle 的运行时依赖树，不修改构建文件。", "command": "tergo-java-dependencies", "mode": "execute", "risk": "medium"},
+    {"id": "test", "name": "运行 Java 测试", "description": "使用当前项目的 Maven 或 Gradle 测试任务。", "command": "tergo-java-test", "mode": "execute", "risk": "medium"},
+    {"id": "check", "name": "检查 Java 项目", "description": "执行 Maven compile 或 Gradle check（跳过测试），不发布构件。", "command": "tergo-java-check", "mode": "execute", "risk": "medium"},
+    {"id": "updates", "name": "检查 Java 依赖", "description": "预览 Maven 或 Gradle 依赖更新，不写回构建文件。", "command": "tergo-java-updates", "mode": "execute", "risk": "medium"},
+    {"id": "build-preview", "name": "预览 Java 构建", "description": "展示 Maven 或 Gradle 构建命令，不执行构建或发布。", "command": "tergo-java-build-preview", "mode": "execute", "risk": "low"}
+  ]
+}

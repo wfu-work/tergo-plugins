@@ -1,0 +1,29 @@
+{
+  "manifestVersion": 1,
+  "id": "go-workflow",
+  "name": "Go 工作流",
+  "version": "0.1.0",
+  "description": "检查 Go 模块、格式、测试、vet、静态分析和依赖风险，并提供构建预览。",
+  "category": "language",
+  "shells": ["zsh", "bash"],
+  "entry": {"zsh": "init.zsh", "bash": "init.bash"},
+  "capabilities": ["go", "modules", "testing", "static-analysis", "vulnerability-scan"],
+  "optionalCommands": ["go", "gofmt", "staticcheck", "govulncheck"],
+  "configSources": ["go.mod", "go.sum", "go.work", "GOPROXY", "GOMODCACHE", "GOWORK"],
+  "redaction": {"mode": "omit-values", "fields": ["module-proxy-credentials", "private-module-paths", "environment-values"]},
+  "platforms": ["darwin", "linux"],
+  "minTergoVersion": "0.2.0",
+  "permissions": ["filesystem", "process", "network"],
+  "surfaces": ["command"],
+  "commands": [
+    {"id": "report", "name": "查看 Go 工具", "description": "查看 Go、模块文件和静态检查工具状态，不修改项目。", "command": "tergo-go-report", "mode": "execute", "risk": "low"},
+    {"id": "files", "name": "发现 Go 文件", "description": "列出 Go 源码、模块和 workspace 文件。", "command": "tergo-go-files", "mode": "execute", "risk": "low"},
+    {"id": "test", "name": "运行 Go 测试", "description": "使用 go test ./... 运行当前模块测试。", "command": "tergo-go-test", "mode": "execute", "risk": "medium"},
+    {"id": "vet", "name": "检查 Go vet", "description": "使用 go vet ./... 检查常见错误。", "command": "tergo-go-vet", "mode": "execute", "risk": "medium"},
+    {"id": "fmt-check", "name": "检查 Go 格式", "description": "检查 Go 文件是否需要 gofmt，不直接写回文件。", "command": "tergo-go-fmt-check", "mode": "execute", "risk": "low"},
+    {"id": "staticcheck", "name": "运行 Staticcheck", "description": "使用已安装的 staticcheck 检查 Go 项目。", "command": "tergo-go-staticcheck", "mode": "execute", "risk": "medium"},
+    {"id": "vuln", "name": "扫描 Go 漏洞", "description": "使用已安装的 govulncheck 扫描依赖和代码。", "command": "tergo-go-vuln", "mode": "execute", "risk": "medium"},
+    {"id": "outdated", "name": "检查 Go 依赖", "description": "查询模块更新，不写入 go.mod 或 go.sum。", "command": "tergo-go-outdated", "mode": "execute", "risk": "medium"},
+    {"id": "build-preview", "name": "预览 Go 构建", "description": "展示 go build ./... 构建目标，不执行构建或发布。", "command": "tergo-go-build-preview", "mode": "execute", "risk": "low"}
+  ]
+}

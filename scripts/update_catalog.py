@@ -26,6 +26,10 @@ CATEGORIES = {
     "observability-readonly": "platform",
     "aws-context": "platform",
     "gcp-context": "platform",
+    "go-workflow": "language",
+    "rust-workflow": "language",
+    "java-workflow": "language",
+    "vue-workflow": "language",
 }
 
 
